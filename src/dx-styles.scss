@@ -1,0 +1,141 @@
+@use "variables.scss" as *;
+
+$side-panel-min-width: 60px;
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  height: 100%;
+}
+
+.dx-viewport {
+  .dx-popup-wrapper {
+    z-index: 1510 !important;
+  }
+
+  #root {
+    height: 100%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .app {
+    background-color: var(--base-bg-darken-5);
+    display: flex;
+    height: 100%;
+    width: 100%;
+    min-width: 320px;
+  }
+
+  .content {
+    flex-grow: 1;
+    padding: 20px 40px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      line-height: 24px;
+    }
+
+    .ficha-detalle {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: 8px;
+      row-gap: 8px;
+
+      > h2 {
+        grid-column: 1;
+        grid-row: 1;
+        min-width: 0;
+        overflow: hidden;
+        font-size: 20px;
+        line-height: 24px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      > [class$='-acciones'] {
+        grid-column: 2;
+        grid-row: 1;
+        justify-content: flex-end;
+      }
+
+      > :not(h2):not([class$='-acciones']) {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
+  .content.espacio-pagina {
+    padding: 10px 20px;
+  }
+
+  .screen-x-small :not(.dx-card).content {
+    padding: 20px;
+  }
+
+  .screen-x-small :not(.dx-card).content.espacio-pagina {
+    padding: 10px;
+  }
+
+  .container {
+    height: 100%;
+    flex-direction: column;
+    display: flex;
+  }
+
+  .layout-body {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .side-nav-outer-toolbar .dx-drawer {
+    height: calc(100% - var(--dx-toolbar-height, 36px));
+  }
+
+  .content-block {
+    margin-top: 8px;
+  }
+
+  .responsive-paddings {
+    padding: 20px;
+  }
+
+  .screen-large .responsive-paddings {
+    padding: 40px;
+  }
+
+  .dx-card.wide-card {
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .with-footer > .dx-scrollable-wrapper >
+  .dx-scrollable-container > .dx-scrollable-content {
+    height: 100%;
+
+    & > .dx-scrollview-content {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+  }
+
+}
+
+.dx-theme-fluent {
+  .dx-drawer-wrapper {
+    .dx-drawer-panel-content,
+    .dx-overlay-content {
+      box-shadow: 0 4px 4px 0 var(--shadow-color-first), 0 1px 2px 0 var(--shadow-color-second);
+    }
+  }
+}

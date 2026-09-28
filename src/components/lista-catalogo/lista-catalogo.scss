@@ -1,0 +1,26 @@
+.lista-catalogo-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.lista-catalogo-busqueda {
+  flex: 1 1 220px;
+  max-width: 360px;
+  min-width: 160px;
+}
+
+.lista-catalogo-paginacion {
+  margin-top: 8px;
+}
+
+/* DevExtreme pinta .dx-datagrid en un hijo de la raíz del widget.
+   La fila queda como el árbol de menús: un cuarto de letra sobre 1 px. */
+.lista-catalogo-grilla .dx-datagrid .dx-datagrid-rowsview .dx-row > td,
+.lista-catalogo-grilla .dx-datagrid .dx-datagrid-headers .dx-row > td {
+  padding: calc(1px + 0.25em) 6px;
+  font-size: 12px;
+  line-height: 16px;
+}

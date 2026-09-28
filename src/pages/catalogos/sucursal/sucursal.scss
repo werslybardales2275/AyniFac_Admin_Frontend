@@ -1,0 +1,15 @@
+.sucursal-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sucursal-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sucursal-edicion h2 {
+  margin-bottom: 0;
+}

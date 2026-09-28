@@ -1,0 +1,15 @@
+.modulo-operativo-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modulo-operativo-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modulo-operativo-edicion h2 {
+  margin-bottom: 0;
+}

@@ -1,0 +1,16 @@
+export { Home as HomePage } from './home/home';
+export { Profile as ProfilePage } from './profile/profile';
+export { Tasks as TasksPage } from './tasks/tasks';
+export { Categoria as CategoriaPage } from './catalogos/categoria/categoria';
+export { Producto as ProductoPage } from './catalogos/producto/producto';
+export { Marca as MarcaPage } from './catalogos/marca/marca';
+export { Usuario as UsuarioPage } from './catalogos/usuario/usuario';
+export { UsuarioPlataforma as UsuarioPlataformaPage } from './catalogos/usuario-plataforma/usuario-plataforma';
+export { Inquilino as InquilinoPage } from './catalogos/inquilino/inquilino';
+export { ModuloOperativo as ModuloOperativoPage } from './catalogos/modulo-operativo/modulo-operativo';
+export { RolPlataforma as RolPlataformaPage } from './catalogos/rol-plataforma/rol-plataforma';
+export { Articulo as ArticuloPage } from './catalogos/articulo/articulo';
+export { Servicio as ServicioPage } from './catalogos/servicio/servicio';
+export { ResumenVentaMensual as ResumenVentaMensualPage } from './tableros/resumen-venta-mensual/resumen-venta-mensual';
+export { ResumenVentasPorVendedor as ResumenVentasPorVendedorPage } from './tableros/resumen-ventas-por-vendedor/resumen-ventas-por-vendedor';
+export { ResumenFacturacionPorCajero as ResumenFacturacionPorCajeroPage } from './tableros/resumen-facturacion-por-cajero/resumen-facturacion-por-cajero';

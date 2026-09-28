@@ -1,0 +1,49 @@
+.modulo-menus {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  width: 100%;
+}
+
+.modulo-menus h2 {
+  margin: 0;
+}
+
+.modulo-menus-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.modulo-menus-acciones .combo-menu-arbol {
+  flex: 1 1 240px;
+  min-width: 200px;
+}
+
+.modulo-menu-carpeta {
+  font-style: italic;
+}
+
+.modulo-menus-arbol {
+  width: 100%;
+  min-width: 0;
+  min-height: 240px;
+}
+
+.modulo-menus-arbol.dx-treelist {
+  .dx-header-row > td,
+  .dx-treelist-rowsview .dx-row > td {
+    padding: calc(1px + 0.25em) 6px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .dx-treelist-empty-space,
+  .dx-treelist-icon-container {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}

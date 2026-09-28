@@ -1,0 +1,19 @@
+.inquilino-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inquilino-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inquilino-edicion h2 {
+  margin-bottom: 0;
+}
+
+.inquilino-sucursales {
+  min-width: 0;
+}

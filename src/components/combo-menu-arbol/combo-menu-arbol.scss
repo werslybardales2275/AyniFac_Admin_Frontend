@@ -1,0 +1,21 @@
+.combo-menu-arbol {
+  width: 100%;
+  min-width: 0;
+}
+
+/* El desplegable se pinta fuera de este componente: la clase va en el TreeList. */
+.combo-menu-arbol-lista.dx-treelist {
+  .dx-header-row > td,
+  .dx-treelist-rowsview .dx-row > td {
+    padding: 1px 6px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .dx-treelist-empty-space,
+  .dx-treelist-icon-container {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}

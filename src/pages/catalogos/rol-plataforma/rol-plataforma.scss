@@ -1,0 +1,65 @@
+.rol-plataforma-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rol-plataforma-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rol-plataforma-edicion h2 {
+  margin-bottom: 0;
+}
+
+.rol-plataforma-fichas {
+  min-width: 0;
+}
+
+.rol-plataforma-fichas .dx-multiview-item-content {
+  padding-top: 12px;
+}
+
+.rol-menus-plataforma,
+.rol-objetos-plataforma {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rol-menus-plataforma-acciones,
+.rol-objetos-plataforma-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.rol-objetos-plataforma-datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.rol-menus-plataforma-acciones .combo-menu-arbol,
+.rol-objetos-combo {
+  flex: 1 1 240px;
+  min-width: 200px;
+}
+
+.rol-objetos-permisos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+
+.rol-menu-carpeta {
+  font-style: italic;
+}
+
+.rol-menus-arbol {
+  min-height: 240px;
+}

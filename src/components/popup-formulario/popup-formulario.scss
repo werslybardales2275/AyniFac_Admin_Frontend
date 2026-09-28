@@ -1,0 +1,17 @@
+.popup-formulario .dx-popup-content {
+  max-height: calc(90vh - 112px);
+  overflow: auto;
+}
+
+.formulario-campos .dx-texteditor,
+.formulario-campos .dx-selectbox,
+.formulario-campos .dx-numberbox,
+.formulario-campos .dx-checkbox {
+  width: 100%;
+}
+
+.popup-formulario-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

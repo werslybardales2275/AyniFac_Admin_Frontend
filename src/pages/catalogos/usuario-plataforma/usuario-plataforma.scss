@@ -1,0 +1,15 @@
+.usuario-plataforma-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.usuario-plataforma-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.usuario-plataforma-edicion h2 {
+  margin-bottom: 0;
+}
