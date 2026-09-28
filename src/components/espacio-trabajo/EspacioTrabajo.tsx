@@ -1,9 +1,6 @@
 import { useEffect, type ComponentType } from 'react';
 import { buscarRuta, type VistaEdicion } from '../../app-routes';
 import { useEspacioTrabajo } from '../../contexts/espacio-trabajo-hooks';
-import { CategoriaEdicion } from '../../pages/catalogos/categoria/categoria-edicion';
-import { MarcaEdicion } from '../../pages/catalogos/marca/marca-edicion';
-import { UsuarioEdicion } from '../../pages/catalogos/usuario/usuario-edicion';
 import { UsuarioPlataformaEdicion } from '../../pages/catalogos/usuario-plataforma/usuario-plataforma-edicion';
 import { InquilinoEdicion } from '../../pages/catalogos/inquilino/inquilino-edicion';
 import { ModuloOperativoEdicion } from '../../pages/catalogos/modulo-operativo/modulo-operativo-edicion';
@@ -12,9 +9,6 @@ import { RolPlataformaEdicion } from '../../pages/catalogos/rol-plataforma/rol-p
 import './espacio-trabajo.scss';
 
 const vistasEdicion: Record<VistaEdicion, ComponentType<{ ruta: string }>> = {
-    marca: MarcaEdicion,
-    categoria: CategoriaEdicion,
-    usuario: UsuarioEdicion,
     'usuario-plataforma': UsuarioPlataformaEdicion,
     inquilino: InquilinoEdicion,
     'modulo-operativo': ModuloOperativoEdicion,
