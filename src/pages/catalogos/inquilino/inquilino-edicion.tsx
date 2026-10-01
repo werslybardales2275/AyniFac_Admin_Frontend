@@ -21,7 +21,7 @@ import type { EnumeracionDto } from '../../../dtos/enumeracion-dto';
 import type { ObjetoGuidReducido } from '../../../dtos/objeto-reducido';
 import { camposDeFicha, textoValorPorDefecto } from '../../../dtos/valor-por-defecto';
 import { OBJETO_INQUILINO } from '../../../seguridad/objetos';
-import { SucursalesInquilino } from '../sucursal/sucursales-inquilino';
+import { InquilinoFichas } from './inquilino-fichas';
 import './inquilino.scss';
 
 const RUTA_LISTA = '/api/administracion/inquilinos';
@@ -358,7 +358,7 @@ export function InquilinoEdicion({ ruta }: { ruta: string }) {
         );
       })}
       </FormularioCampos>
-      {inquilinoId && <SucursalesInquilino inquilinoId={inquilinoId} />}
+      {inquilinoId && <InquilinoFichas inquilinoId={inquilinoId} />}
     </div>
   );
 }

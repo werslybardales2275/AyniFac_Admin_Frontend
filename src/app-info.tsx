@@ -1,5 +1,5 @@
 const appInfo = {
-    title: 'Aynifac Admin'
+    title: 'Aynifac - Serefac'
 };
 export default appInfo;
 

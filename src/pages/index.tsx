@@ -1,6 +1,15 @@
-export { Home as HomePage } from './home/home';
 export { Profile as ProfilePage } from './profile/profile';
 export { UsuarioPlataforma as UsuarioPlataformaPage } from './catalogos/usuario-plataforma/usuario-plataforma';
 export { Inquilino as InquilinoPage } from './catalogos/inquilino/inquilino';
 export { ModuloOperativo as ModuloOperativoPage } from './catalogos/modulo-operativo/modulo-operativo';
 export { RolPlataforma as RolPlataformaPage } from './catalogos/rol-plataforma/rol-plataforma';
+export { SunatUnidad as SunatUnidadPage } from './catalogos/sunat-unidad/sunat-unidad';
+export { SunatSegmento as SunatSegmentoPage } from './catalogos/sunat-segmento/sunat-segmento';
+export { SunatFamilia as SunatFamiliaPage } from './catalogos/sunat-familia/sunat-familia';
+export { SunatClase as SunatClasePage } from './catalogos/sunat-clase/sunat-clase';
+export { SunatProducto as SunatProductoPage } from './catalogos/sunat-producto/sunat-producto';
+export { SunatMoneda as SunatMonedaPage } from './catalogos/sunat-moneda/sunat-moneda';
+export { SunatMotivoNotaCredito as SunatMotivoNotaCreditoPage } from './catalogos/sunat-motivo-nota-credito/sunat-motivo-nota-credito';
+export { SunatMotivoNotaDebito as SunatMotivoNotaDebitoPage } from './catalogos/sunat-motivo-nota-debito/sunat-motivo-nota-debito';
+export { SunatMedioPagoDetraccion as SunatMedioPagoDetraccionPage } from './catalogos/sunat-medio-pago-detraccion/sunat-medio-pago-detraccion';
+export { SunatMotivoDetraccion as SunatMotivoDetraccionPage } from './catalogos/sunat-motivo-detraccion/sunat-motivo-detraccion';

@@ -47,12 +47,15 @@ export function PopupFormulario({
   visible,
   titulo,
   guardando = false,
+  rejilla = false,
   alCerrar,
   children,
 }: {
   visible: boolean;
   titulo: string;
   guardando?: boolean;
+  /** Rejilla de React. El Form de DevExtreme recrea el editor y suelta el enfoque al escribir. */
+  rejilla?: boolean;
   alCerrar: () => void;
   children: ReactNode;
 }) {
@@ -123,9 +126,17 @@ export function PopupFormulario({
       toolbarItems={barraInferior}
       onHiding={alCerrar}
     >
-      <FormularioCampos>{campos}</FormularioCampos>
+      {rejilla ? <RejillaCampos>{campos}</RejillaCampos> : <FormularioCampos>{campos}</FormularioCampos>}
     </Popup>
   );
+}
+
+/**
+ * Dos columnas en escritorio y una en móvil, sin el Form de DevExtreme.
+ * Así el editor sigue montado mientras se escribe.
+ */
+export function RejillaCampos({ children }: { children: ReactNode }) {
+  return <div className="rejilla-campos">{children}</div>;
 }
 
 function textoEtiqueta(props: Record<string, unknown>): string {

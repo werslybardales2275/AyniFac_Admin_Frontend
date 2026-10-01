@@ -35,6 +35,11 @@ export interface ListaCatalogoProps<T extends object> {
   puedeEliminar?: boolean;
   /** Icono del botón Abrir. Por defecto abre como edición. */
   iconoAbrir?: string;
+  /**
+   * Muestra la columna de la clave.
+   * La clave sustituta queda oculta. Un código de negocio, como el de SUNAT, se muestra.
+   */
+  mostrarClave?: boolean;
 }
 
 /**
@@ -67,6 +72,7 @@ export function ListaCatalogo<T extends object>({
   puedeCrear = true,
   puedeEliminar = true,
   iconoAbrir = 'edit',
+  mostrarClave = false,
 }: ListaCatalogoProps<T>) {
   const [texto, setTexto] = useState('');
   const [criterio, setCriterio] = useState('');
@@ -79,7 +85,7 @@ export function ListaCatalogo<T extends object>({
   const [recarga, setRecarga] = useState(0);
 
   const columnas = (Object.keys(esquema) as (keyof T & string)[])
-    .filter((campo) => campo !== clave && esquema[campo].oculto !== true);
+    .filter((campo) => (mostrarClave || campo !== clave) && esquema[campo].oculto !== true);
 
   useEffect(() => {
     let vigente = true;
@@ -169,7 +175,7 @@ export function ListaCatalogo<T extends object>({
 
     setEliminando(true);
     try {
-      const respuesta = await solicitarApi(`${ruta}/${String(id)}`, { method: 'DELETE' });
+      const respuesta = await solicitarApi(`${ruta}/${encodeURIComponent(String(id))}`, { method: 'DELETE' });
       if (!respuesta.ok) {
         notify(await leerMensajeError(respuesta, 'No se pudo eliminar el registro.'), 'error', 3000);
         return;

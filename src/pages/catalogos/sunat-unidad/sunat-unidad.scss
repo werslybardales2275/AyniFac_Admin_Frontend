@@ -1,0 +1,15 @@
+.sunat-unidad-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sunat-unidad-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sunat-unidad-edicion h2 {
+  margin-bottom: 0;
+}

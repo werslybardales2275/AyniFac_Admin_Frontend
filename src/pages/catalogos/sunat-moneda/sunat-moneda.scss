@@ -1,0 +1,15 @@
+.sunat-moneda-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sunat-moneda-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sunat-moneda-edicion h2 {
+  margin-bottom: 0;
+}

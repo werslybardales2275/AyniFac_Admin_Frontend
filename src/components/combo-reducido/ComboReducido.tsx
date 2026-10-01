@@ -1,7 +1,7 @@
 import SelectBox from 'devextreme-react/select-box';
-import type { ObjetoGuidReducido, ObjetoReducido } from '../../dtos/objeto-reducido';
+import type { ObjetoCodigoReducido, ObjetoGuidReducido, ObjetoReducido } from '../../dtos/objeto-reducido';
 
-type Opcion = ObjetoReducido | ObjetoGuidReducido;
+type Opcion = ObjetoReducido | ObjetoGuidReducido | ObjetoCodigoReducido;
 
 interface ComboReducidoProps<T extends Opcion> {
   etiqueta: string;
@@ -13,7 +13,7 @@ interface ComboReducidoProps<T extends Opcion> {
 
 /**
  * Lista desplegable común de los combos.
- * Muestra valor y devuelve id, sea entero o Guid.
+ * Muestra valor y devuelve id, sea entero, Guid o código.
  */
 export function ComboReducido<T extends Opcion>({
   etiqueta,

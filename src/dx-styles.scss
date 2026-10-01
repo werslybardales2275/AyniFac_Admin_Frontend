@@ -69,6 +69,12 @@ body {
         grid-column: 1 / -1;
       }
     }
+
+    // El TabPanel de DevExtreme solo trae 20px dentro de un formulario.
+    // En las vistas anidadas el contenido queda pegado al borde de la ficha.
+    .dx-tabpanel .dx-multiview-item-content {
+      padding: 20px;
+    }
   }
 
   .content.espacio-pagina {
@@ -127,6 +133,14 @@ body {
       flex-direction: column;
       min-height: 100%;
     }
+  }
+
+  // El tema deja el buscador de DataGrid y TreeList solo con margen izquierdo.
+  // El bloque de la derecha va anclado al borde (right: 0) y sin separación arriba.
+  .dx-datagrid-header-panel,
+  .dx-treelist-header-panel {
+    padding-block-start: 8px;
+    padding-inline-end: 8px;
   }
 
 }

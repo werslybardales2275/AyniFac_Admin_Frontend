@@ -4,8 +4,19 @@ import { useEspacioTrabajo } from '../../contexts/espacio-trabajo-hooks';
 import { UsuarioPlataformaEdicion } from '../../pages/catalogos/usuario-plataforma/usuario-plataforma-edicion';
 import { InquilinoEdicion } from '../../pages/catalogos/inquilino/inquilino-edicion';
 import { ModuloOperativoEdicion } from '../../pages/catalogos/modulo-operativo/modulo-operativo-edicion';
+import { InquilinoModuloOperativoEdicion } from '../../pages/catalogos/inquilino-modulo-operativo/inquilino-modulo-operativo-edicion';
 import { SucursalEdicion } from '../../pages/catalogos/sucursal/sucursal-edicion';
 import { RolPlataformaEdicion } from '../../pages/catalogos/rol-plataforma/rol-plataforma-edicion';
+import { SunatUnidadEdicion } from '../../pages/catalogos/sunat-unidad/sunat-unidad-edicion';
+import { SunatSegmentoEdicion } from '../../pages/catalogos/sunat-segmento/sunat-segmento-edicion';
+import { SunatFamiliaEdicion } from '../../pages/catalogos/sunat-familia/sunat-familia-edicion';
+import { SunatClaseEdicion } from '../../pages/catalogos/sunat-clase/sunat-clase-edicion';
+import { SunatProductoEdicion } from '../../pages/catalogos/sunat-producto/sunat-producto-edicion';
+import { SunatMonedaEdicion } from '../../pages/catalogos/sunat-moneda/sunat-moneda-edicion';
+import { SunatMotivoNotaCreditoEdicion } from '../../pages/catalogos/sunat-motivo-nota-credito/sunat-motivo-nota-credito-edicion';
+import { SunatMotivoNotaDebitoEdicion } from '../../pages/catalogos/sunat-motivo-nota-debito/sunat-motivo-nota-debito-edicion';
+import { SunatMedioPagoDetraccionEdicion } from '../../pages/catalogos/sunat-medio-pago-detraccion/sunat-medio-pago-detraccion-edicion';
+import { SunatMotivoDetraccionEdicion } from '../../pages/catalogos/sunat-motivo-detraccion/sunat-motivo-detraccion-edicion';
 import './espacio-trabajo.scss';
 
 const vistasEdicion: Record<VistaEdicion, ComponentType<{ ruta: string }>> = {
@@ -13,7 +24,18 @@ const vistasEdicion: Record<VistaEdicion, ComponentType<{ ruta: string }>> = {
     inquilino: InquilinoEdicion,
     'modulo-operativo': ModuloOperativoEdicion,
     sucursal: SucursalEdicion,
+    'inquilino-modulo-operativo': InquilinoModuloOperativoEdicion,
     'rol-plataforma': RolPlataformaEdicion,
+    'sunat-unidad': SunatUnidadEdicion,
+    'sunat-segmento': SunatSegmentoEdicion,
+    'sunat-familia': SunatFamiliaEdicion,
+    'sunat-clase': SunatClaseEdicion,
+    'sunat-producto': SunatProductoEdicion,
+    'sunat-moneda': SunatMonedaEdicion,
+    'sunat-motivo-nota-credito': SunatMotivoNotaCreditoEdicion,
+    'sunat-motivo-nota-debito': SunatMotivoNotaDebitoEdicion,
+    'sunat-medio-pago-detraccion': SunatMedioPagoDetraccionEdicion,
+    'sunat-motivo-detraccion': SunatMotivoDetraccionEdicion,
 };
 
 /**

@@ -1,0 +1,15 @@
+.sunat-clase-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sunat-clase-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sunat-clase-edicion h2 {
+  margin-bottom: 0;
+}

@@ -91,10 +91,9 @@ export default function SideNavigationMenu(props: React.PropsWithChildren<SideNa
         />
       </div>
       <footer className={'menu-copyright'}>
-        Copyright © 2011-{new Date().getFullYear()} {appInfo.title} Inc.
+        Copyright © 2018-{new Date().getFullYear()}.
         <br />
-        All trademarks or registered trademarks are property of their
-        respective owners.
+        Sistemas para su empresa EIRL - Ruc: 20603660588
       </footer>
     </div>
   );

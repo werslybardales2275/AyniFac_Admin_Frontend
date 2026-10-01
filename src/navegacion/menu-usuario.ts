@@ -18,6 +18,16 @@ const rutasPantalla: Record<string, string> = {
   '/ModuloOperativo_ListView': '/modulo-operativo',
   '/RolPlataforma_ListView': '/rol-plataforma',
   '/UsuarioPlataforma_ListView': '/usuario-plataforma',
+  '/SunatUnidad_ListView': '/sunat-unidad',
+  '/SunatSegmento_ListView': '/sunat-segmento',
+  '/SunatFamilia_ListView': '/sunat-familia',
+  '/SunatClase_ListView': '/sunat-clase',
+  '/SunatProducto_ListView': '/sunat-producto',
+  '/SunatMoneda_ListView': '/sunat-moneda',
+  '/SunatMotivoNotaCredito_ListView': '/sunat-motivo-nota-credito',
+  '/SunatMotivoNotaDebito_ListView': '/sunat-motivo-nota-debito',
+  '/SunatMedioPagoDetraccion_ListView': '/sunat-medio-pago-detraccion',
+  '/SunatMotivoDetraccion_ListView': '/sunat-motivo-detraccion',
 };
 
 export function aItemsMenu(nodos: NodoMenu[], expandido: boolean): ItemMenuNav[] {

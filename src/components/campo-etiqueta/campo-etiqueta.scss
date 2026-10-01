@@ -1,0 +1,15 @@
+.rejilla-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rejilla-campo .dx-texteditor {
+  width: 100%;
+}
+
+.rejilla-etiqueta {
+  font-size: 12px;
+  line-height: 16px;
+}
