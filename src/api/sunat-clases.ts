@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { SunatClaseDto } from '../dtos/sunat-clase-dto';
 import type { ObjetoCodigoReducido } from '../dtos/objeto-reducido';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -84,17 +85,5 @@ export async function obtenerReducidoSunatClase(codigo: string): Promise<ObjetoC
  */
 
 export async function opcionesDeSunatClase(codigo?: string | null): Promise<ObjetoCodigoReducido[]> {
-  const opciones: ObjetoCodigoReducido[] = [];
-  for (let pagina = 1; pagina <= 40; pagina++) {
-    const lote = await listaReducidaSunatClase(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  const clave = codigo?.trim();
-  if (clave && !opciones.some((opcion) => opcion.id === clave))
-    opciones.unshift(await obtenerReducidoSunatClase(clave));
-
-  return opciones;
+  return opcionesDeRuta<ObjetoCodigoReducido>(RUTA, codigo, 'No se pudieron cargar las clases SUNAT.', TAMANO_COMBO, 40);
 }

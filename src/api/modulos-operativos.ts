@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { ModuloOperativoDto } from '../dtos/modulo-operativo-dto';
 import type { ObjetoReducido } from '../dtos/objeto-reducido';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -78,16 +79,6 @@ export async function obtenerReducidoModuloOperativo(moduloOperativoId: number):
  * Junta las páginas del combo. Si el módulo elegido no vino en esas páginas, lo pide aparte.
  */
 export async function opcionesDeModuloOperativo(moduloOperativoId?: number | null): Promise<ObjetoReducido[]> {
-  const opciones: ObjetoReducido[] = [];
-  for (let pagina = 1; pagina <= 20; pagina++) {
-    const lote = await listaReducidaModuloOperativo(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  if (moduloOperativoId && moduloOperativoId > 0 && !opciones.some((opcion) => opcion.id === moduloOperativoId))
-    opciones.unshift(await obtenerReducidoModuloOperativo(moduloOperativoId));
-
-  return opciones;
+  const elegido = moduloOperativoId && moduloOperativoId > 0 ? moduloOperativoId : undefined;
+  return opcionesDeRuta<ObjetoReducido>(RUTA, elegido, 'No se pudieron cargar los módulos operativos.', TAMANO_COMBO);
 }

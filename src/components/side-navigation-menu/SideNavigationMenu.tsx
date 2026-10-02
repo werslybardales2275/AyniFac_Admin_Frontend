@@ -9,7 +9,6 @@ import './SideNavigationMenu.scss';
 import type { SideNavigationMenuProps } from '../../types';
 
 import { ThemeContext } from '../../theme';
-import appInfo from '../../app-info';
 
 export default function SideNavigationMenu(props: React.PropsWithChildren<SideNavigationMenuProps>) {
   const {

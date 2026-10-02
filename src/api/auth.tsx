@@ -68,6 +68,9 @@ export async function getUser() {
 }
 
 export function signOut() {
+  // Vacía la caché de permisos en el servidor. No se espera la respuesta:
+  // la sesión local se cierra de inmediato.
+  solicitarApi('/api/administracion/autenticacion/cerrar-sesion', { method: 'POST' }).catch(() => { });
   cerrarSesion();
 }
 

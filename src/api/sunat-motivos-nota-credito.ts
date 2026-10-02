@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { SunatMotivoNotaCreditoDto } from '../dtos/sunat-motivo-nota-credito-dto';
 import type { ObjetoCodigoReducido } from '../dtos/objeto-reducido';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -79,17 +80,5 @@ export async function obtenerReducidoSunatMotivoNotaCredito(codigo: string): Pro
 }
 
 export async function opcionesDeSunatMotivoNotaCredito(codigo?: string | null): Promise<ObjetoCodigoReducido[]> {
-  const opciones: ObjetoCodigoReducido[] = [];
-  for (let pagina = 1; pagina <= 20; pagina++) {
-    const lote = await listaReducidaSunatMotivoNotaCredito(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  const clave = codigo?.trim();
-  if (clave && !opciones.some((opcion) => opcion.id === clave))
-    opciones.unshift(await obtenerReducidoSunatMotivoNotaCredito(clave));
-
-  return opciones;
+  return opcionesDeRuta<ObjetoCodigoReducido>(RUTA, codigo, 'No se pudieron cargar los motivos de nota de crédito.', TAMANO_COMBO);
 }

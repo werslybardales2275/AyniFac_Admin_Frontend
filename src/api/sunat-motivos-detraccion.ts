@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { SunatMotivoDetraccionDto } from '../dtos/sunat-motivo-detraccion-dto';
 import type { ObjetoCodigoReducido } from '../dtos/objeto-reducido';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -79,17 +80,5 @@ export async function obtenerReducidoSunatMotivoDetraccion(codigo: string): Prom
 }
 
 export async function opcionesDeSunatMotivoDetraccion(codigo?: string | null): Promise<ObjetoCodigoReducido[]> {
-  const opciones: ObjetoCodigoReducido[] = [];
-  for (let pagina = 1; pagina <= 20; pagina++) {
-    const lote = await listaReducidaSunatMotivoDetraccion(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  const clave = codigo?.trim();
-  if (clave && !opciones.some((opcion) => opcion.id === clave))
-    opciones.unshift(await obtenerReducidoSunatMotivoDetraccion(clave));
-
-  return opciones;
+  return opcionesDeRuta<ObjetoCodigoReducido>(RUTA, codigo, 'No se pudieron cargar los motivos de detracción.', TAMANO_COMBO);
 }

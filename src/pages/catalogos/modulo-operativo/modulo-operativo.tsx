@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'devextreme-react/button';
-import TextBox from 'devextreme-react/text-box';
+import type { TextBoxRef } from 'devextreme-react/text-box';
 import notify from 'devextreme/ui/notify';
 import { agregarModuloOperativo } from '../../../api/modulos-operativos';
+import { TextoCampo, textoEscrito } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ListaCatalogo, recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { AccionesFormulario, CampoFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
+import { AccionesFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import { moduloOperativoDtoEsquema } from '../../../dtos/modulo-operativo-dto';
 import {
@@ -24,6 +25,7 @@ export function ModuloOperativo() {
   const [altaVisible, setAltaVisible] = useState(false);
   const [nombre, setNombre] = useState('');
   const [guardando, setGuardando] = useState(false);
+  const campoNombre = useRef<TextBoxRef>(null);
 
   function abrirModulo(modulo: ModuloOperativoListadoDto) {
     navigate(`/modulo-operativo/${modulo.moduloOperativoId}`, {
@@ -39,7 +41,7 @@ export function ModuloOperativo() {
   }
 
   async function guardarAlta() {
-    const nombreLimpio = nombre.trim();
+    const nombreLimpio = textoEscrito(campoNombre, nombre).trim();
     if (!nombreLimpio) {
       notify('El nombre es obligatorio.', 'warning', 2500);
       return;
@@ -69,7 +71,10 @@ export function ModuloOperativo() {
         ruta={RUTA}
         clave="moduloOperativoId"
         esquema={moduloOperativoListadoEsquema}
-        onNuevo={() => setAltaVisible(true)}
+        onNuevo={() => {
+          setNombre('');
+          setAltaVisible(true);
+        }}
         onAbrir={abrirModulo}
         puedeCrear={permiso.escritura}
         puedeEliminar={permiso.eliminacion}
@@ -79,20 +84,17 @@ export function ModuloOperativo() {
         visible={altaVisible}
         titulo="Nuevo módulo operativo"
         guardando={guardando}
+        rejilla
         alCerrar={cerrarAlta}
       >
-        <CampoFormulario>
-          <TextBox
-            label="Nombre"
-            labelMode="floating"
-            value={nombre}
-            maxLength={moduloOperativoDtoEsquema.nombre.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setNombre(evento.value ?? '')}
-            onEnterKey={() => { void guardarAlta(); }}
-          />
-        </CampoFormulario>
+        <TextoCampo
+          referencia={campoNombre}
+          etiqueta={moduloOperativoDtoEsquema.nombre.etiqueta}
+          valor={nombre}
+          longitudMaxima={moduloOperativoDtoEsquema.nombre.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setNombre}
+        />
         <AccionesFormulario>
           <Button text="Guardar" type="default" stylingMode="contained" disabled={guardando} onClick={() => { void guardarAlta(); }} />
           <Button text="Cancelar" stylingMode="outlined" disabled={guardando} onClick={cerrarAlta} />

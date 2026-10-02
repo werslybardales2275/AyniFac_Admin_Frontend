@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { SunatSegmentoDto } from '../dtos/sunat-segmento-dto';
 import type { ObjetoCodigoReducido } from '../dtos/objeto-reducido';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -79,17 +80,5 @@ export async function obtenerReducidoSunatSegmento(codigo: string): Promise<Obje
 }
 
 export async function opcionesDeSunatSegmento(codigo?: string | null): Promise<ObjetoCodigoReducido[]> {
-  const opciones: ObjetoCodigoReducido[] = [];
-  for (let pagina = 1; pagina <= 20; pagina++) {
-    const lote = await listaReducidaSunatSegmento(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  const clave = codigo?.trim();
-  if (clave && !opciones.some((opcion) => opcion.id === clave))
-    opciones.unshift(await obtenerReducidoSunatSegmento(clave));
-
-  return opciones;
+  return opcionesDeRuta<ObjetoCodigoReducido>(RUTA, codigo, 'No se pudieron cargar los segmentos SUNAT.', TAMANO_COMBO);
 }

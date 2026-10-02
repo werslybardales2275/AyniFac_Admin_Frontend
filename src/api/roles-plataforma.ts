@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { ObjetoReducido } from '../dtos/objeto-reducido';
 import type { RolPlataformaDto } from '../dtos/rol-plataforma-dto';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -78,17 +79,6 @@ export async function obtenerReducidoRolPlataforma(rolId: number): Promise<Objet
  * Junta las páginas del combo. Si el rol elegido no vino en esas páginas, lo pide aparte.
  */
 export async function opcionesDeRolPlataforma(rolId?: number | null): Promise<ObjetoReducido[]> {
-  const opciones: ObjetoReducido[] = [];
-  for (let pagina = 1; pagina <= 20; pagina++) {
-    const lote = await listaReducidaRolPlataforma(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  if (rolId && rolId > 0 && !opciones.some((opcion) => opcion.id === rolId)) {
-    opciones.unshift(await obtenerReducidoRolPlataforma(rolId));
-  }
-
-  return opciones;
+  const elegido = rolId && rolId > 0 ? rolId : undefined;
+  return opcionesDeRuta<ObjetoReducido>(RUTA, elegido, 'No se pudieron cargar los roles de plataforma.', TAMANO_COMBO);
 }

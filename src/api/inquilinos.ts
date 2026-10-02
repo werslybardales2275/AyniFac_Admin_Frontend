@@ -1,4 +1,5 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
 import type { InquilinoDto } from '../dtos/inquilino-dto';
 import type { ObjetoGuidReducido } from '../dtos/objeto-reducido';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
@@ -108,16 +109,6 @@ export async function obtenerReducidoInquilino(inquilinoId: string): Promise<Obj
  * Junta las páginas del combo. Si el inquilino elegido no vino en esas páginas, lo pide aparte.
  */
 export async function opcionesDeInquilino(inquilinoId?: string | null): Promise<ObjetoGuidReducido[]> {
-  const opciones: ObjetoGuidReducido[] = [];
-  for (let pagina = 1; pagina <= 20; pagina++) {
-    const lote = await listaReducidaInquilino(pagina, TAMANO_COMBO);
-    opciones.push(...lote);
-    if (lote.length < TAMANO_COMBO)
-      break;
-  }
-
-  if (inquilinoId && inquilinoId !== inquilinoVacio && !opciones.some((opcion) => opcion.id === inquilinoId))
-    opciones.unshift(await obtenerReducidoInquilino(inquilinoId));
-
-  return opciones;
+  const elegido = inquilinoId && inquilinoId !== inquilinoVacio ? inquilinoId : undefined;
+  return opcionesDeRuta<ObjetoGuidReducido>(RUTA, elegido, 'No se pudieron cargar los inquilinos.', TAMANO_COMBO);
 }
