@@ -11,6 +11,7 @@ export const aparienciaGrillaCompacta = {
   showRowLines: true,
   showBorders: true,
   rowAlternationEnabled: true,
+  hoverStateEnabled: true,
 } as const;
 
 DataGrid.defaultOptions({ options: aparienciaGrillaCompacta });

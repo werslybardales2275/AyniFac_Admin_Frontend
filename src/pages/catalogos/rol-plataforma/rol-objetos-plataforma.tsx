@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
 import CheckBox from 'devextreme-react/check-box';
-import DataGrid, { Column, SearchPanel, Sorting } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Pager, Paging, SearchPanel, Sorting } from 'devextreme-react/data-grid';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
-import type { FocusedRowChangedEvent } from 'devextreme/ui/data_grid';
+import type { FocusedRowChangedEvent, RowClickEvent } from 'devextreme/ui/data_grid';
 import {
   agregarObjetoAlRol,
   listarObjetosAdmin,
@@ -90,16 +90,21 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
     setPermisos(permisosVacios);
   }
 
-  function editar() {
-    if (!fila || !puedeAsignar)
+  function cargarEdicion(registro: RolObjetoPlataformaListadoDto) {
+    if (!puedeAsignar)
       return;
-    setEditandoId(fila.rolObjetoId);
-    setObjetoId(fila.objetoId);
+    setEditandoId(registro.rolObjetoId);
+    setObjetoId(registro.objetoId);
     setPermisos({
-      permisoLectura: fila.permisoLectura,
-      permisoEscritura: fila.permisoEscritura,
-      permisoEliminacion: fila.permisoEliminacion,
+      permisoLectura: registro.permisoLectura,
+      permisoEscritura: registro.permisoEscritura,
+      permisoEliminacion: registro.permisoEliminacion,
     });
+  }
+
+  function editar() {
+    if (fila)
+      cargarEdicion(fila);
   }
 
   async function asignar() {
@@ -177,6 +182,11 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
 
   function alEnfocar(evento: FocusedRowChangedEvent<RolObjetoPlataformaListadoDto, string>) {
     setFila(evento.row?.data);
+  }
+
+  function alClicFila(evento: RowClickEvent<RolObjetoPlataformaListadoDto, string>) {
+    if (evento.data)
+      cargarEdicion(evento.data);
   }
 
   function marcar(campo: keyof typeof permisosVacios, valor: boolean | null | undefined) {
@@ -305,8 +315,16 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
           hoverStateEnabled={true}
           noDataText="Este rol no tiene objetos asignados."
           onFocusedRowChanged={alEnfocar}
+          onRowClick={alClicFila}
         >
           <Sorting mode="single" />
+          <Paging defaultPageSize={20} />
+          <Pager
+            visible={true}
+            showInfo={true}
+            showPageSizeSelector={true}
+            allowedPageSizes={[10, 20, 50, 100]}
+          />
           <SearchPanel visible={true} placeholder="Buscar objeto" />
           <Column dataField="objetoNombre" caption="Objeto" />
           <Column dataField="permisoLectura" caption="Lectura" dataType="boolean" />

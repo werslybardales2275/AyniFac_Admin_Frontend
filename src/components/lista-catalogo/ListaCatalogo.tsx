@@ -8,7 +8,7 @@ import Pagination from 'devextreme-react/pagination';
 import TextBox from 'devextreme-react/text-box';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
-import type { FocusedRowChangedEvent } from 'devextreme/ui/data_grid';
+import type { FocusedRowChangedEvent, RowClickEvent } from 'devextreme/ui/data_grid';
 import { leerMensajeError, solicitarApi } from '../../api/cliente-http';
 import type { EsquemaDto } from '../../dtos/campo';
 import type { ResultadoOperacion } from '../../dtos/resultado-operacion';
@@ -146,14 +146,17 @@ export function ListaCatalogo<T extends object>({
       setCriterio(siguiente);
   }
 
-  function abrir() {
-    if (!fila)
-      return;
+  function abrirRegistro(registro: T) {
     if (onAbrir) {
-      onAbrir(fila);
+      onAbrir(registro);
       return;
     }
     notify('El formulario de edición se conectará en el siguiente paso.', 'info', 2500);
+  }
+
+  function abrir() {
+    if (fila)
+      abrirRegistro(fila);
   }
 
   function nuevo() {
@@ -191,6 +194,12 @@ export function ListaCatalogo<T extends object>({
 
   function alEnfocarFila(evento: FocusedRowChangedEvent) {
     setFila(evento.row?.data as T | undefined);
+  }
+
+  function alClicFila(evento: RowClickEvent) {
+    const registro = evento.data as T | undefined;
+    if (registro)
+      abrirRegistro(registro);
   }
 
   function alCambiarPagina(indice: number) {
@@ -236,6 +245,7 @@ export function ListaCatalogo<T extends object>({
         columnAutoWidth={true}
         columnHidingEnabled={true}
         onFocusedRowChanged={alEnfocarFila}
+        onRowClick={alClicFila}
       >
         <Sorting mode="none" />
         {columnas.map((campo) => {
