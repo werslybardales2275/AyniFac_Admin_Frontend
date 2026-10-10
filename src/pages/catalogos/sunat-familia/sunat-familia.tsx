@@ -124,7 +124,6 @@ export function SunatFamilia() {
         visible={altaVisible}
         titulo="Nueva familia SUNAT"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

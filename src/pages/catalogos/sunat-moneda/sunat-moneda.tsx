@@ -91,7 +91,6 @@ export function SunatMoneda() {
         visible={altaVisible}
         titulo="Nueva moneda SUNAT"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

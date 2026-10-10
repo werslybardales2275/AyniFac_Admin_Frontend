@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'devextreme-react/button';
 import SelectBox from 'devextreme-react/select-box';
-import TextBox from 'devextreme-react/text-box';
+import type { TextBoxRef } from 'devextreme-react/text-box';
 import notify from 'devextreme/ui/notify';
 import { agregarInquilino, opcionesDeInquilino } from '../../../api/inquilinos';
+import { CampoEtiqueta, TextoCampo, textoEscrito } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ComboReducido } from '../../../components/combo-reducido/ComboReducido';
 import { ListaCatalogo, recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { AccionesFormulario, CampoFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
+import { AccionesFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import { inquilinoDtoEsquema, modosInquilino } from '../../../dtos/inquilino-dto';
 import type { EnumeracionDto } from '../../../dtos/enumeracion-dto';
@@ -46,6 +47,14 @@ export function Inquilino() {
   const [contrasenaAdministrador, setContrasenaAdministrador] = useState('');
   const [nombreCompletoAdministrador, setNombreCompletoAdministrador] = useState('');
   const [guardando, setGuardando] = useState(false);
+  const campoCodigo = useRef<TextBoxRef>(null);
+  const campoRazonSocial = useRef<TextBoxRef>(null);
+  const campoRuc = useRef<TextBoxRef>(null);
+  const campoSubdominio = useRef<TextBoxRef>(null);
+  const campoCadenaConexion = useRef<TextBoxRef>(null);
+  const campoNombreAdministrador = useRef<TextBoxRef>(null);
+  const campoContrasena = useRef<TextBoxRef>(null);
+  const campoNombreCompleto = useRef<TextBoxRef>(null);
 
   useEffect(() => {
     if (!altaVisible)
@@ -101,12 +110,12 @@ export function Inquilino() {
   }
 
   async function guardarAlta() {
-    const codigoLimpio = codigo.trim().toLowerCase();
-    const razonLimpia = razonSocial.trim();
-    const rucLimpio = ruc.trim();
-    const subdominioLimpio = subdominio.trim().toLowerCase();
+    const codigoLimpio = textoEscrito(campoCodigo, codigo).trim().toLowerCase();
+    const razonLimpia = textoEscrito(campoRazonSocial, razonSocial).trim();
+    const rucLimpio = textoEscrito(campoRuc, ruc).trim();
+    const subdominioLimpio = textoEscrito(campoSubdominio, subdominio).trim().toLowerCase();
     const modo = modoPorId(modoId);
-    const contrasenaLimpia = contrasenaAdministrador.trim();
+    const contrasenaLimpia = textoEscrito(campoContrasena, contrasenaAdministrador).trim();
 
     if (!codigoValido.test(codigoLimpio)) {
       notify('El código del inquilino no es válido.', 'warning', 2500);
@@ -145,10 +154,10 @@ export function Inquilino() {
         subdominio: subdominioLimpio,
         modo,
         inquilinoAnterior: anterior,
-        cadenaConexion: cadenaConexion.trim(),
-        nombreAdministrador: nombreAdministrador.trim(),
+        cadenaConexion: textoEscrito(campoCadenaConexion, cadenaConexion).trim(),
+        nombreAdministrador: textoEscrito(campoNombreAdministrador, nombreAdministrador).trim(),
         contrasenaAdministrador: contrasenaLimpia,
-        nombreCompletoAdministrador: nombreCompletoAdministrador.trim(),
+        nombreCompletoAdministrador: textoEscrito(campoNombreCompleto, nombreCompletoAdministrador).trim(),
       });
       setAltaVisible(false);
       limpiarAlta();
@@ -183,54 +192,41 @@ export function Inquilino() {
         guardando={guardando}
         alCerrar={cerrarAlta}
       >
-        <CampoFormulario>
-          <TextBox
-            label="Código"
-            labelMode="floating"
-            value={codigo}
-            maxLength={inquilinoDtoEsquema.codigo.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setCodigo(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Razón social"
-            labelMode="floating"
-            value={razonSocial}
-            maxLength={inquilinoDtoEsquema.razonSocial.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setRazonSocial(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="RUC"
-            labelMode="floating"
-            value={ruc}
-            maxLength={inquilinoDtoEsquema.ruc.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setRuc(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Subdominio"
-            labelMode="floating"
-            value={subdominio}
-            maxLength={inquilinoDtoEsquema.subdominio.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setSubdominio(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
+        <TextoCampo
+          referencia={campoCodigo}
+          etiqueta={inquilinoDtoEsquema.codigo.etiqueta}
+          valor={codigo}
+          longitudMaxima={inquilinoDtoEsquema.codigo.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setCodigo}
+        />
+        <TextoCampo
+          referencia={campoRazonSocial}
+          etiqueta={inquilinoDtoEsquema.razonSocial.etiqueta}
+          valor={razonSocial}
+          longitudMaxima={inquilinoDtoEsquema.razonSocial.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setRazonSocial}
+        />
+        <TextoCampo
+          referencia={campoRuc}
+          etiqueta={inquilinoDtoEsquema.ruc.etiqueta}
+          valor={ruc}
+          longitudMaxima={inquilinoDtoEsquema.ruc.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setRuc}
+        />
+        <TextoCampo
+          referencia={campoSubdominio}
+          etiqueta={inquilinoDtoEsquema.subdominio.etiqueta}
+          valor={subdominio}
+          longitudMaxima={inquilinoDtoEsquema.subdominio.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setSubdominio}
+        />
+        <CampoEtiqueta etiqueta={inquilinoDtoEsquema.modo.etiqueta}>
           <SelectBox
-            label="Modo"
-            labelMode="floating"
+            labelMode="hidden"
             dataSource={modosInquilino}
             displayExpr="nombre"
             valueExpr="id"
@@ -239,60 +235,48 @@ export function Inquilino() {
             disabled={guardando}
             onValueChanged={(evento) => setModoId(evento.value ?? null)}
           />
-        </CampoFormulario>
-        <CampoFormulario>
+        </CampoEtiqueta>
+        <CampoEtiqueta etiqueta={inquilinoDtoEsquema.inquilinoAnterior.etiqueta}>
           <ComboReducido
-            etiqueta="Inquilino anterior"
+            etiqueta=""
             valor={anteriorId}
             opciones={anteriores}
             deshabilitado={guardando || cargandoAnteriores}
             alCambiar={setAnteriorId}
           />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Cadena de conexión"
-            labelMode="floating"
-            value={cadenaConexion}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setCadenaConexion(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Usuario administrador"
-            labelMode="floating"
-            value={nombreAdministrador}
-            maxLength={inquilinoDtoEsquema.nombreAdministrador.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setNombreAdministrador(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Contraseña del administrador"
-            labelMode="floating"
-            mode="password"
-            value={contrasenaAdministrador}
-            maxLength={inquilinoDtoEsquema.contrasenaAdministrador.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setContrasenaAdministrador(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Nombre del administrador"
-            labelMode="floating"
-            value={nombreCompletoAdministrador}
-            maxLength={inquilinoDtoEsquema.nombreCompletoAdministrador.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setNombreCompletoAdministrador(evento.value ?? '')}
-          />
-        </CampoFormulario>
+        </CampoEtiqueta>
+        <TextoCampo
+          referencia={campoCadenaConexion}
+          etiqueta={inquilinoDtoEsquema.cadenaConexion.etiqueta}
+          valor={cadenaConexion}
+          deshabilitado={guardando}
+          alCambiar={setCadenaConexion}
+        />
+        <TextoCampo
+          referencia={campoNombreAdministrador}
+          etiqueta={inquilinoDtoEsquema.nombreAdministrador.etiqueta}
+          valor={nombreAdministrador}
+          longitudMaxima={inquilinoDtoEsquema.nombreAdministrador.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setNombreAdministrador}
+        />
+        <TextoCampo
+          referencia={campoContrasena}
+          etiqueta={inquilinoDtoEsquema.contrasenaAdministrador.etiqueta}
+          mode="password"
+          valor={contrasenaAdministrador}
+          longitudMaxima={inquilinoDtoEsquema.contrasenaAdministrador.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setContrasenaAdministrador}
+        />
+        <TextoCampo
+          referencia={campoNombreCompleto}
+          etiqueta={inquilinoDtoEsquema.nombreCompletoAdministrador.etiqueta}
+          valor={nombreCompletoAdministrador}
+          longitudMaxima={inquilinoDtoEsquema.nombreCompletoAdministrador.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setNombreCompletoAdministrador}
+        />
         <AccionesFormulario>
           <Button text="Guardar" type="default" stylingMode="contained" disabled={guardando} onClick={() => { void guardarAlta(); }} />
           <Button text="Cancelar" stylingMode="outlined" disabled={guardando} onClick={cerrarAlta} />

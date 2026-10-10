@@ -32,6 +32,8 @@ export function TextoCampo({
   soloLectura,
   alCambiar,
   referencia,
+  mode,
+  alEnter,
 }: {
   etiqueta: string;
   valor: string;
@@ -40,12 +42,16 @@ export function TextoCampo({
   soloLectura?: boolean;
   alCambiar: (valor: string) => void;
   referencia?: Ref<TextBoxRef>;
+  mode?: 'text' | 'password';
+  alEnter?: () => void;
 }) {
   return (
     <CampoEtiqueta etiqueta={etiqueta}>
       <TextBox
         ref={referencia}
         labelMode="hidden"
+        mode={mode}
+        onEnterKey={alEnter}
         value={valor}
         maxLength={longitudMaxima}
         valueChangeEvent="input"

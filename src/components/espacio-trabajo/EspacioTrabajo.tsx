@@ -17,6 +17,7 @@ import { SunatMotivoNotaCreditoEdicion } from '../../pages/catalogos/sunat-motiv
 import { SunatMotivoNotaDebitoEdicion } from '../../pages/catalogos/sunat-motivo-nota-debito/sunat-motivo-nota-debito-edicion';
 import { SunatMedioPagoDetraccionEdicion } from '../../pages/catalogos/sunat-medio-pago-detraccion/sunat-medio-pago-detraccion-edicion';
 import { SunatMotivoDetraccionEdicion } from '../../pages/catalogos/sunat-motivo-detraccion/sunat-motivo-detraccion-edicion';
+import { TipoInformacionEdicion } from '../../pages/catalogos/tipo-informacion/tipo-informacion-edicion';
 import './espacio-trabajo.scss';
 
 const vistasEdicion: Record<VistaEdicion, ComponentType<{ ruta: string }>> = {
@@ -36,6 +37,7 @@ const vistasEdicion: Record<VistaEdicion, ComponentType<{ ruta: string }>> = {
     'sunat-motivo-nota-debito': SunatMotivoNotaDebitoEdicion,
     'sunat-medio-pago-detraccion': SunatMedioPagoDetraccionEdicion,
     'sunat-motivo-detraccion': SunatMotivoDetraccionEdicion,
+    'tipo-informacion': TipoInformacionEdicion,
 };
 
 /**

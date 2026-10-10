@@ -10,7 +10,7 @@ import {
   rutaModulosInquilino,
 } from '../../../api/inquilinos-modulos-operativos';
 import { recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { FormularioCampos } from '../../../components/popup-formulario/PopupFormulario';
+import { RejillaCampos } from '../../../components/popup-formulario/PopupFormulario';
 import { useEspacioTrabajo } from '../../../contexts/espacio-trabajo-hooks';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import {
@@ -171,9 +171,9 @@ export function InquilinoModuloOperativoEdicion({ ruta }: { ruta: string }) {
         <Button text="Cerrar" stylingMode="outlined" disabled={guardando} onClick={cerrar} />
       </div>
       {cargando && <p>Cargando módulo operativo…</p>}
-      <FormularioCampos>
+      <RejillaCampos>
         {camposModuloInquilino(asignacion, { soloLectura: !editando, bloqueado, modulos, alCambiar: cambiar })}
-      </FormularioCampos>
+      </RejillaCampos>
     </div>
   );
 }

@@ -14,7 +14,8 @@ import {
     SunatMotivoNotaCreditoPage,
     SunatMotivoNotaDebitoPage,
     SunatMedioPagoDetraccionPage,
-    SunatMotivoDetraccionPage
+    SunatMotivoDetraccionPage,
+    TipoInformacionPage
 } from './pages';
 import { withNavigationWatcher } from './contexts/navigation-hooks';
 
@@ -93,6 +94,11 @@ const routeData = [
         path: '/sunat-motivo-detraccion',
         titulo: 'Motivos de detracción',
         element: SunatMotivoDetraccionPage
+    },
+    {
+        path: '/tipo-informacion',
+        titulo: 'Tipos de información',
+        element: TipoInformacionPage
     }
 ];
 
@@ -104,7 +110,7 @@ export const routes = routeData.map(route => {
 });
 
 /** Vista de edición que el espacio de trabajo monta en su propia pestaña. */
-export type VistaEdicion = 'usuario-plataforma' | 'inquilino' | 'sucursal' | 'inquilino-modulo-operativo' | 'rol-plataforma' | 'modulo-operativo' | 'sunat-unidad' | 'sunat-segmento' | 'sunat-familia' | 'sunat-clase' | 'sunat-producto' | 'sunat-moneda' | 'sunat-motivo-nota-credito' | 'sunat-motivo-nota-debito' | 'sunat-medio-pago-detraccion' | 'sunat-motivo-detraccion';
+export type VistaEdicion = 'usuario-plataforma' | 'inquilino' | 'sucursal' | 'inquilino-modulo-operativo' | 'rol-plataforma' | 'modulo-operativo' | 'sunat-unidad' | 'sunat-segmento' | 'sunat-familia' | 'sunat-clase' | 'sunat-producto' | 'sunat-moneda' | 'sunat-motivo-nota-credito' | 'sunat-motivo-nota-debito' | 'sunat-medio-pago-detraccion' | 'sunat-motivo-detraccion' | 'tipo-informacion';
 
 export interface RutaResuelta {
     titulo: string;
@@ -130,6 +136,7 @@ const ediciones: { patron: RegExp; titulo: string; rutaMenu: string; vista: Vist
     { patron: /^\/sunat-motivo-nota-debito\/([^/]+)$/, titulo: 'Motivo de nota de débito', rutaMenu: '/sunat-motivo-nota-debito', vista: 'sunat-motivo-nota-debito' },
     { patron: /^\/sunat-medio-pago-detraccion\/([^/]+)$/, titulo: 'Medio de pago de detracción', rutaMenu: '/sunat-medio-pago-detraccion', vista: 'sunat-medio-pago-detraccion' },
     { patron: /^\/sunat-motivo-detraccion\/([^/]+)$/, titulo: 'Motivo de detracción', rutaMenu: '/sunat-motivo-detraccion', vista: 'sunat-motivo-detraccion' },
+    { patron: /^\/tipo-informacion\/(\d+)$/, titulo: 'Tipo de información', rutaMenu: '/tipo-informacion', vista: 'tipo-informacion' },
 ];
 
 export function buscarRuta(path: string): RutaResuelta | undefined {

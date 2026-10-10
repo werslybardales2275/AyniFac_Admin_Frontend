@@ -95,7 +95,6 @@ export function SunatMotivoNotaDebito() {
         visible={altaVisible}
         titulo="Nuevo motivo de nota de débito"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

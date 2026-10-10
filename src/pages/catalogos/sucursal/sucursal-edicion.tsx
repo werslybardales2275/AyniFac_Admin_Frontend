@@ -5,7 +5,7 @@ import notify from 'devextreme/ui/notify';
 import type { ItemClickEvent } from 'devextreme/ui/drop_down_button';
 import { modificarSucursal, obtenerSucursal, rutaSucursales } from '../../../api/sucursales';
 import { recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { FormularioCampos } from '../../../components/popup-formulario/PopupFormulario';
+import { RejillaCampos } from '../../../components/popup-formulario/PopupFormulario';
 import { useEspacioTrabajo } from '../../../contexts/espacio-trabajo-hooks';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import { prepararSucursal, sucursalDtoEsquema, sucursalVacia, type SucursalDto } from '../../../dtos/sucursal-dto';
@@ -151,9 +151,9 @@ export function SucursalEdicion({ ruta }: { ruta: string }) {
         <Button text="Cerrar" stylingMode="outlined" disabled={guardando} onClick={cerrar} />
       </div>
       {cargando && <p>Cargando sucursal…</p>}
-      <FormularioCampos>
+      <RejillaCampos>
         {camposSucursal(sucursal, { soloLectura: !editando, bloqueado, alCambiar: cambiar })}
-      </FormularioCampos>
+      </RejillaCampos>
     </div>
   );
 }

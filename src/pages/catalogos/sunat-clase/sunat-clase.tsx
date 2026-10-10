@@ -124,7 +124,6 @@ export function SunatClase() {
         visible={altaVisible}
         titulo="Nueva clase SUNAT"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

@@ -88,7 +88,6 @@ export function SunatUnidad() {
         visible={altaVisible}
         titulo="Nueva unidad SUNAT"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

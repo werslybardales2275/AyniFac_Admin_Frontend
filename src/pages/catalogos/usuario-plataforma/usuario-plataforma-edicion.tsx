@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
-import CheckBox from 'devextreme-react/check-box';
 import DropDownButton from 'devextreme-react/drop-down-button';
-import TextBox from 'devextreme-react/text-box';
 import notify from 'devextreme/ui/notify';
 import type { ItemClickEvent } from 'devextreme/ui/drop_down_button';
 import { opcionesDeRolPlataforma } from '../../../api/roles-plataforma';
 import { modificarUsuarioPlataforma, obtenerUsuarioPlataforma } from '../../../api/usuarios-plataforma';
+import { BooleanoCampo, CampoEtiqueta, TextoCampo } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ComboReducido } from '../../../components/combo-reducido/ComboReducido';
 import { recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { CampoFormulario, FormularioCampos } from '../../../components/popup-formulario/PopupFormulario';
+import { RejillaCampos } from '../../../components/popup-formulario/PopupFormulario';
 import { useEspacioTrabajo } from '../../../contexts/espacio-trabajo-hooks';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import { usuarioPlataformaDtoEsquema, type UsuarioPlataformaDto } from '../../../dtos/usuario-plataforma-dto';
@@ -259,7 +258,7 @@ export function UsuarioPlataformaEdicion({ ruta }: { ruta: string }) {
         <Button text="Cerrar" stylingMode="outlined" disabled={guardando} onClick={cerrar} />
       </div>
       {cargando && <p>Cargando usuario…</p>}
-      <FormularioCampos>
+      <RejillaCampos>
       {CAMPOS_FICHA.map((campo) => {
         const meta = usuarioPlataformaDtoEsquema[campo];
         const lectura = soloLectura || ('soloLectura' in meta && meta.soloLectura);
@@ -267,29 +266,27 @@ export function UsuarioPlataformaEdicion({ ruta }: { ruta: string }) {
         if (campo === 'activo' || campo === 'esAdministrador') {
           const marcado = campo === 'activo' ? activo : esAdministrador;
           return (
-            <CampoFormulario key={campo}>
-              <CheckBox
-                text={meta.etiqueta}
-                value={marcado}
-                readOnly={lectura}
-                disabled={bloqueado}
-                onValueChanged={(evento) => {
-                  const valor = evento.value === true;
-                  if (campo === 'activo')
-                    setActivo(valor);
-                  else
-                    setEsAdministrador(valor);
-                }}
-              />
-            </CampoFormulario>
+            <BooleanoCampo
+              key={campo}
+              etiqueta={meta.etiqueta}
+              valor={marcado}
+              soloLectura={lectura}
+              deshabilitado={bloqueado}
+              alCambiar={(valor) => {
+                if (campo === 'activo')
+                  setActivo(valor);
+                else
+                  setEsAdministrador(valor);
+              }}
+            />
           );
         }
 
         if (campo === 'rolDto') {
           return (
-            <CampoFormulario key={campo}>
+            <CampoEtiqueta key={campo} etiqueta={meta.etiqueta}>
               <ComboReducido
-                etiqueta={meta.etiqueta}
+                etiqueta=""
                 valor={rol?.id ?? null}
                 opciones={roles}
                 deshabilitado={bloqueado || soloLectura}
@@ -302,7 +299,7 @@ export function UsuarioPlataformaEdicion({ ruta }: { ruta: string }) {
                   setRol(opcion ?? { id, valor: rol?.id === id ? rol.valor : '' });
                 }}
               />
-            </CampoFormulario>
+            </CampoEtiqueta>
           );
         }
 
@@ -310,41 +307,35 @@ export function UsuarioPlataformaEdicion({ ruta }: { ruta: string }) {
           return null;
 
         const controles = [
-          <CampoFormulario key={campo}>
-            <TextBox
-              label={meta.etiqueta}
-              labelMode="floating"
-              value={valorTextoDe(campo)}
-              maxLength={'longitudMaxima' in meta ? meta.longitudMaxima : undefined}
-              valueChangeEvent="input"
-              readOnly={lectura}
-              disabled={bloqueado}
-              onValueChanged={(evento) => cambiarTexto(campo, evento.value ?? '')}
-            />
-          </CampoFormulario>,
+          <TextoCampo
+            key={campo}
+            etiqueta={meta.etiqueta}
+            valor={valorTextoDe(campo)}
+            longitudMaxima={'longitudMaxima' in meta ? meta.longitudMaxima : undefined}
+            soloLectura={lectura}
+            deshabilitado={bloqueado}
+            alCambiar={(valor) => cambiarTexto(campo, valor)}
+          />,
         ];
 
         if (campo === 'userName') {
           controles.push(
-            <CampoFormulario key="contrasena">
-              <TextBox
-                label={editando ? 'Nueva contraseña' : 'Contraseña'}
-                labelMode="floating"
-                mode="password"
-                value={contrasena}
-                maxLength={usuarioPlataformaDtoEsquema.contrasena.longitudMaxima}
-                valueChangeEvent="input"
-                readOnly={soloLectura}
-                disabled={bloqueado}
-                onValueChanged={(evento) => setContrasena(evento.value ?? '')}
-              />
-            </CampoFormulario>,
+            <TextoCampo
+              key="contrasena"
+              etiqueta={editando ? 'Nueva contraseña' : 'Contraseña'}
+              mode="password"
+              valor={contrasena}
+              longitudMaxima={usuarioPlataformaDtoEsquema.contrasena.longitudMaxima}
+              soloLectura={soloLectura}
+              deshabilitado={bloqueado}
+              alCambiar={setContrasena}
+            />,
           );
         }
 
         return controles;
       })}
-      </FormularioCampos>
+      </RejillaCampos>
     </div>
   );
 }

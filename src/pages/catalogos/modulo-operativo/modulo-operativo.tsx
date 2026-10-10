@@ -84,7 +84,6 @@ export function ModuloOperativo() {
         visible={altaVisible}
         titulo="Nuevo módulo operativo"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

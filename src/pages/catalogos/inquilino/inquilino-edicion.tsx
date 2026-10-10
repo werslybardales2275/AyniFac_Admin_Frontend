@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
 import DropDownButton from 'devextreme-react/drop-down-button';
 import SelectBox from 'devextreme-react/select-box';
-import TextBox from 'devextreme-react/text-box';
 import notify from 'devextreme/ui/notify';
 import type { ItemClickEvent } from 'devextreme/ui/drop_down_button';
 import { modificarInquilino, obtenerInquilino, opcionesDeInquilino } from '../../../api/inquilinos';
+import { CampoEtiqueta, TextoCampo } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ComboReducido } from '../../../components/combo-reducido/ComboReducido';
 import { recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { CampoFormulario, FormularioCampos } from '../../../components/popup-formulario/PopupFormulario';
+import { RejillaCampos } from '../../../components/popup-formulario/PopupFormulario';
 import { useEspacioTrabajo } from '../../../contexts/espacio-trabajo-hooks';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import {
@@ -287,7 +287,7 @@ export function InquilinoEdicion({ ruta }: { ruta: string }) {
         <Button text="Cerrar" stylingMode="outlined" disabled={guardando} onClick={cerrar} />
       </div>
       {cargando && <p>Cargando inquilino…</p>}
-      <FormularioCampos>
+      <RejillaCampos>
       {CAMPOS_FICHA.map((campo) => {
         const meta = inquilinoDtoEsquema[campo];
         const lectura = soloLectura || ('soloLectura' in meta && meta.soloLectura) || campo === 'codigo' || campo === 'modo';
@@ -296,10 +296,9 @@ export function InquilinoEdicion({ ruta }: { ruta: string }) {
           const actual = campo === 'modo' ? modo : estado;
           const origen = campo === 'modo' ? modosInquilino : estadosEditables;
           return (
-            <CampoFormulario key={campo}>
+            <CampoEtiqueta key={campo} etiqueta={meta.etiqueta}>
               <SelectBox
-                label={meta.etiqueta}
-                labelMode="floating"
+                labelMode="hidden"
                 dataSource={origen}
                 displayExpr="nombre"
                 valueExpr="id"
@@ -314,15 +313,15 @@ export function InquilinoEdicion({ ruta }: { ruta: string }) {
                     setEstado(elegido);
                 }}
               />
-            </CampoFormulario>
+            </CampoEtiqueta>
           );
         }
 
         if (campo === 'inquilinoAnterior') {
           return (
-            <CampoFormulario key={campo}>
+            <CampoEtiqueta key={campo} etiqueta={meta.etiqueta}>
               <ComboReducido
-                etiqueta={meta.etiqueta}
+                etiqueta=""
                 valor={anterior?.id ?? null}
                 opciones={anteriores}
                 deshabilitado={bloqueado || soloLectura}
@@ -335,7 +334,7 @@ export function InquilinoEdicion({ ruta }: { ruta: string }) {
                   setAnterior(opcion ?? { id, valor: anterior?.id === id ? anterior.valor : '' });
                 }}
               />
-            </CampoFormulario>
+            </CampoEtiqueta>
           );
         }
 
@@ -343,21 +342,18 @@ export function InquilinoEdicion({ ruta }: { ruta: string }) {
           return null;
 
         return (
-          <CampoFormulario key={campo}>
-            <TextBox
-              label={meta.etiqueta}
-              labelMode="floating"
-              value={valorTextoDe(campo)}
-              maxLength={'longitudMaxima' in meta ? meta.longitudMaxima : undefined}
-              valueChangeEvent="input"
-              readOnly={lectura}
-              disabled={bloqueado}
-              onValueChanged={(evento) => cambiarTexto(campo, evento.value ?? '')}
-            />
-          </CampoFormulario>
+          <TextoCampo
+            key={campo}
+            etiqueta={meta.etiqueta}
+            valor={valorTextoDe(campo)}
+            longitudMaxima={'longitudMaxima' in meta ? meta.longitudMaxima : undefined}
+            soloLectura={lectura}
+            deshabilitado={bloqueado}
+            alCambiar={(valor) => cambiarTexto(campo, valor)}
+          />
         );
       })}
-      </FormularioCampos>
+      </RejillaCampos>
       {inquilinoId && <InquilinoFichas inquilinoId={inquilinoId} />}
     </div>
   );

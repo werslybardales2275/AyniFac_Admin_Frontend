@@ -103,7 +103,6 @@ export function SunatMotivoDetraccion() {
         visible={altaVisible}
         titulo="Nuevo motivo de detracción"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

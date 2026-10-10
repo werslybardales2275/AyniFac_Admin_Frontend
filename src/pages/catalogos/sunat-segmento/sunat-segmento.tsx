@@ -91,7 +91,6 @@ export function SunatSegmento() {
         visible={altaVisible}
         titulo="Nuevo segmento SUNAT"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

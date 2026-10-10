@@ -28,6 +28,30 @@ const rutasPantalla: Record<string, string> = {
   '/SunatMotivoNotaDebito_ListView': '/sunat-motivo-nota-debito',
   '/SunatMedioPagoDetraccion_ListView': '/sunat-medio-pago-detraccion',
   '/SunatMotivoDetraccion_ListView': '/sunat-motivo-detraccion',
+  '/TipoInformacion_ListView': '/tipo-informacion',
+};
+
+/** Iconos del menú (nombres del backend) traducidos a los SVG de public/icons. */
+const ICONOS_MENU: Record<string, string> = {
+  'nav-plataforma': '/icons/configuracion.svg',
+  inquilino: '/icons/direccion.svg',
+  'modulo-operativo': '/icons/equipo.svg',
+  'nav-seguridad': '/icons/seguridad.svg',
+  rol: '/icons/equipo.svg',
+  'usuario-plataforma': '/icons/persona.svg',
+  'nav-sunat': '/icons/nav-valores-sunat.svg',
+  'sunat-unidad': '/icons/unidad-medida.svg',
+  'sunat-segmento': '/icons/categoria.svg',
+  'sunat-familia': '/icons/dependencia.svg',
+  'sunat-clase': '/icons/composicion.svg',
+  'sunat-producto': '/icons/producto.svg',
+  'sunat-moneda': '/icons/moneda.svg',
+  'sunat-motivo-nota-credito': '/icons/motivo-nota-sunat.svg',
+  'sunat-motivo-nota-debito': '/icons/motivo-nota-sunat.svg',
+  'sunat-medio-pago-detraccion': '/icons/medio-pago.svg',
+  'sunat-motivo-detraccion': '/icons/motivo-detraccion.svg',
+  'nav-tablas': '/icons/nav-tablas.svg',
+  'tipo-informacion': '/icons/tablas.svg',
 };
 
 export function aItemsMenu(nodos: NodoMenu[], expandido: boolean): ItemMenuNav[] {
@@ -41,7 +65,7 @@ function aItem(nodo: NodoMenu, expandido: boolean): ItemMenuNav {
   return {
     id: nodo.menuId,
     text: nodo.nombre,
-    icon: hijos ? 'folder' : undefined,
+    icon: ICONOS_MENU[nodo.icono] ?? (hijos ? 'folder' : 'doc'),
     path,
     expanded: hijos ? expandido : undefined,
     items: hijos,

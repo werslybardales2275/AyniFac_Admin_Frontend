@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'devextreme-react/button';
-import CheckBox from 'devextreme-react/check-box';
-import TextBox from 'devextreme-react/text-box';
+import type { TextBoxRef } from 'devextreme-react/text-box';
 import notify from 'devextreme/ui/notify';
 import { opcionesDeRolPlataforma } from '../../../api/roles-plataforma';
 import { agregarUsuarioPlataforma } from '../../../api/usuarios-plataforma';
+import { BooleanoCampo, CampoEtiqueta, TextoCampo, textoEscrito } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ComboReducido } from '../../../components/combo-reducido/ComboReducido';
 import { ListaCatalogo, recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { AccionesFormulario, CampoFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
+import { AccionesFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import type { ObjetoReducido } from '../../../dtos/objeto-reducido';
 import { usuarioPlataformaDtoEsquema } from '../../../dtos/usuario-plataforma-dto';
@@ -38,6 +38,12 @@ export function UsuarioPlataforma() {
   const [activo, setActivo] = useState(true);
   const [esAdministrador, setEsAdministrador] = useState(false);
   const [guardando, setGuardando] = useState(false);
+  const campoDni = useRef<TextBoxRef>(null);
+  const campoEmpleado = useRef<TextBoxRef>(null);
+  const campoTelefono = useRef<TextBoxRef>(null);
+  const campoCorreo = useRef<TextBoxRef>(null);
+  const campoUsuario = useRef<TextBoxRef>(null);
+  const campoContrasena = useRef<TextBoxRef>(null);
 
   useEffect(() => {
     if (!altaVisible)
@@ -92,12 +98,12 @@ export function UsuarioPlataforma() {
   }
 
   async function guardarAlta() {
-    const dniLimpio = dni.trim();
-    const empleadoLimpio = empleado.trim();
-    const telefonoLimpio = telefono.trim();
-    const correoLimpio = correo.trim();
-    const usuarioLimpio = userName.trim();
-    const contrasenaLimpia = contrasena.trim();
+    const dniLimpio = textoEscrito(campoDni, dni).trim();
+    const empleadoLimpio = textoEscrito(campoEmpleado, empleado).trim();
+    const telefonoLimpio = textoEscrito(campoTelefono, telefono).trim();
+    const correoLimpio = textoEscrito(campoCorreo, correo).trim();
+    const usuarioLimpio = textoEscrito(campoUsuario, userName).trim();
+    const contrasenaLimpia = textoEscrito(campoContrasena, contrasena).trim();
 
     if (!dniLimpio) {
       notify('El DNI es obligatorio.', 'warning', 2500);
@@ -174,98 +180,76 @@ export function UsuarioPlataforma() {
         guardando={guardando}
         alCerrar={cerrarAlta}
       >
-        <CampoFormulario>
-          <TextBox
-            label="DNI"
-            labelMode="floating"
-            value={dni}
-            maxLength={usuarioPlataformaDtoEsquema.dni.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setDni(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Empleado"
-            labelMode="floating"
-            value={empleado}
-            maxLength={usuarioPlataformaDtoEsquema.empleado.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setEmpleado(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Teléfono"
-            labelMode="floating"
-            value={telefono}
-            maxLength={usuarioPlataformaDtoEsquema.telefono.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setTelefono(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Correo"
-            labelMode="floating"
-            value={correo}
-            maxLength={usuarioPlataformaDtoEsquema.correo.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setCorreo(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Usuario"
-            labelMode="floating"
-            value={userName}
-            maxLength={usuarioPlataformaDtoEsquema.userName.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setUserName(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <TextBox
-            label="Contraseña"
-            labelMode="floating"
-            mode="password"
-            value={contrasena}
-            maxLength={usuarioPlataformaDtoEsquema.contrasena.longitudMaxima}
-            valueChangeEvent="input"
-            disabled={guardando}
-            onValueChanged={(evento) => setContrasena(evento.value ?? '')}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
+        <TextoCampo
+          referencia={campoDni}
+          etiqueta={usuarioPlataformaDtoEsquema.dni.etiqueta}
+          valor={dni}
+          longitudMaxima={usuarioPlataformaDtoEsquema.dni.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setDni}
+        />
+        <TextoCampo
+          referencia={campoEmpleado}
+          etiqueta={usuarioPlataformaDtoEsquema.empleado.etiqueta}
+          valor={empleado}
+          longitudMaxima={usuarioPlataformaDtoEsquema.empleado.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setEmpleado}
+        />
+        <TextoCampo
+          referencia={campoTelefono}
+          etiqueta={usuarioPlataformaDtoEsquema.telefono.etiqueta}
+          valor={telefono}
+          longitudMaxima={usuarioPlataformaDtoEsquema.telefono.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setTelefono}
+        />
+        <TextoCampo
+          referencia={campoCorreo}
+          etiqueta={usuarioPlataformaDtoEsquema.correo.etiqueta}
+          valor={correo}
+          longitudMaxima={usuarioPlataformaDtoEsquema.correo.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setCorreo}
+        />
+        <TextoCampo
+          referencia={campoUsuario}
+          etiqueta={usuarioPlataformaDtoEsquema.userName.etiqueta}
+          valor={userName}
+          longitudMaxima={usuarioPlataformaDtoEsquema.userName.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setUserName}
+        />
+        <TextoCampo
+          referencia={campoContrasena}
+          etiqueta={usuarioPlataformaDtoEsquema.contrasena.etiqueta}
+          mode="password"
+          valor={contrasena}
+          longitudMaxima={usuarioPlataformaDtoEsquema.contrasena.longitudMaxima}
+          deshabilitado={guardando}
+          alCambiar={setContrasena}
+        />
+        <CampoEtiqueta etiqueta={usuarioPlataformaDtoEsquema.rolDto.etiqueta}>
           <ComboReducido
-            etiqueta="Rol"
+            etiqueta=""
             valor={rolId}
             opciones={roles}
             deshabilitado={guardando || cargandoRoles}
             alCambiar={setRolId}
           />
-        </CampoFormulario>
-        <CampoFormulario>
-          <CheckBox
-            text="Activo"
-            value={activo}
-            disabled={guardando}
-            onValueChanged={(evento) => setActivo(evento.value === true)}
-          />
-        </CampoFormulario>
-        <CampoFormulario>
-          <CheckBox
-            text="Es administrador"
-            value={esAdministrador}
-            disabled={guardando}
-            onValueChanged={(evento) => setEsAdministrador(evento.value === true)}
-          />
-        </CampoFormulario>
+        </CampoEtiqueta>
+        <BooleanoCampo
+          etiqueta={usuarioPlataformaDtoEsquema.activo.etiqueta}
+          valor={activo}
+          deshabilitado={guardando}
+          alCambiar={setActivo}
+        />
+        <BooleanoCampo
+          etiqueta={usuarioPlataformaDtoEsquema.esAdministrador.etiqueta}
+          valor={esAdministrador}
+          deshabilitado={guardando}
+          alCambiar={setEsAdministrador}
+        />
         <AccionesFormulario>
           <Button text="Guardar" type="default" stylingMode="contained" disabled={guardando} onClick={() => { void guardarAlta(); }} />
           <Button text="Cancelar" stylingMode="outlined" disabled={guardando} onClick={cerrarAlta} />

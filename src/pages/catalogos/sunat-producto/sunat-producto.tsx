@@ -124,7 +124,6 @@ export function SunatProducto() {
         visible={altaVisible}
         titulo="Nuevo producto SUNAT"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

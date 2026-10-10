@@ -95,7 +95,6 @@ export function SunatMedioPagoDetraccion() {
         visible={altaVisible}
         titulo="Nuevo medio de pago de detracción"
         guardando={guardando}
-        rejilla
         alCerrar={cerrarAlta}
       >
         <TextoCampo

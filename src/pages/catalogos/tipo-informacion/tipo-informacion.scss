@@ -1,0 +1,15 @@
+.tipo-informacion-edicion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tipo-informacion-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tipo-informacion-edicion h2 {
+  margin-bottom: 0;
+}

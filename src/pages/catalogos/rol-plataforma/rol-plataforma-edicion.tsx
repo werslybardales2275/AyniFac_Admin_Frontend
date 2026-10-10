@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from 'devextreme-react/button';
 import DropDownButton from 'devextreme-react/drop-down-button';
-import TextBox from 'devextreme-react/text-box';
+import type { TextBoxRef } from 'devextreme-react/text-box';
 import notify from 'devextreme/ui/notify';
 import type { ItemClickEvent } from 'devextreme/ui/drop_down_button';
 import { modificarRolPlataforma, obtenerRolPlataforma } from '../../../api/roles-plataforma';
+import { TextoCampo, textoEscrito } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
-import { CampoFormulario, FormularioCampos } from '../../../components/popup-formulario/PopupFormulario';
+import { RejillaCampos } from '../../../components/popup-formulario/PopupFormulario';
 import { useEspacioTrabajo } from '../../../contexts/espacio-trabajo-hooks';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
 import { rolPlataformaDtoEsquema, type RolPlataformaDto } from '../../../dtos/rol-plataforma-dto';
-import { camposDeFicha, textoValorPorDefecto } from '../../../dtos/valor-por-defecto';
+import { textoValorPorDefecto } from '../../../dtos/valor-por-defecto';
 import { OBJETO_ROL_PLATAFORMA } from '../../../seguridad/objetos';
 import { RolPlataformaFichas } from './rol-plataforma-fichas';
 import './rol-plataforma.scss';
 
 const RUTA_LISTA = '/api/administracion/roles-plataforma';
-const CAMPOS_FICHA = camposDeFicha(rolPlataformaDtoEsquema, 'rolId');
 
 interface AccionGuardar {
   id: 'guardar' | 'guardar-cerrar';
@@ -38,6 +38,7 @@ export function RolPlataformaEdicion({ ruta }: { ruta: string }) {
   const permiso = usePermisoObjeto(OBJETO_ROL_PLATAFORMA);
   const rolId = rolIdDe(ruta);
   const [nombre, setNombre] = useState('');
+  const campoNombre = useRef<TextBoxRef>(null);
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [editando, setEditando] = useState(false);
@@ -83,7 +84,7 @@ export function RolPlataformaEdicion({ ruta }: { ruta: string }) {
     if (!permiso.escritura)
       return;
 
-    const nombreLimpio = nombre.trim();
+    const nombreLimpio = textoEscrito(campoNombre, nombre).trim();
     if (!nombreLimpio) {
       notify('El nombre es obligatorio.', 'warning', 2500);
       return;
@@ -148,28 +149,19 @@ export function RolPlataformaEdicion({ ruta }: { ruta: string }) {
         <Button text="Cerrar" stylingMode="outlined" disabled={guardando} onClick={cerrar} />
       </div>
       {cargando && <p>Cargando rol…</p>}
-      <FormularioCampos>
-        {CAMPOS_FICHA.map((campo) => {
-          const meta = rolPlataformaDtoEsquema[campo];
-          if (meta.control !== 'texto' || campo !== 'nombre')
-            return null;
-
-          return (
-            <CampoFormulario key={campo}>
-              <TextBox
-                label={meta.etiqueta}
-                labelMode="floating"
-                value={nombre}
-                maxLength={meta.longitudMaxima}
-                valueChangeEvent="input"
-                readOnly={!editando}
-                disabled={bloqueado}
-                onValueChanged={(evento) => setNombre(evento.value ?? '')}
-              />
-            </CampoFormulario>
-          );
-        })}
-      </FormularioCampos>
+      {!cargando && (
+        <RejillaCampos>
+          <TextoCampo
+            referencia={campoNombre}
+            etiqueta={rolPlataformaDtoEsquema.nombre.etiqueta}
+            valor={nombre}
+            longitudMaxima={rolPlataformaDtoEsquema.nombre.longitudMaxima}
+            soloLectura={!editando}
+            deshabilitado={bloqueado}
+            alCambiar={setNombre}
+          />
+        </RejillaCampos>
+      )}
       {rolId > 0 && (
         <RolPlataformaFichas
           rolId={rolId}

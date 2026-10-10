@@ -13,3 +13,4 @@ export { SunatMotivoNotaCredito as SunatMotivoNotaCreditoPage } from './catalogo
 export { SunatMotivoNotaDebito as SunatMotivoNotaDebitoPage } from './catalogos/sunat-motivo-nota-debito/sunat-motivo-nota-debito';
 export { SunatMedioPagoDetraccion as SunatMedioPagoDetraccionPage } from './catalogos/sunat-medio-pago-detraccion/sunat-medio-pago-detraccion';
 export { SunatMotivoDetraccion as SunatMotivoDetraccionPage } from './catalogos/sunat-motivo-detraccion/sunat-motivo-detraccion';
+export { TipoInformacion as TipoInformacionPage } from './catalogos/tipo-informacion/tipo-informacion';

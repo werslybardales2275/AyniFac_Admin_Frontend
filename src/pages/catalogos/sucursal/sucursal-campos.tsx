@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import CheckBox from 'devextreme-react/check-box';
-import TextBox from 'devextreme-react/text-box';
-import { CampoFormulario } from '../../../components/popup-formulario/PopupFormulario';
+import { BooleanoCampo, TextoCampo } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { sucursalDtoEsquema, type SucursalDto } from '../../../dtos/sucursal-dto';
 import { camposDeFicha } from '../../../dtos/valor-por-defecto';
 
@@ -14,8 +12,8 @@ interface OpcionesCamposSucursal {
 }
 
 /**
- * Devuelve los controles como hijos directos del Form.
- * DevExtreme no reconoce un Item envuelto en otro componente.
+ * Devuelve los campos de la ficha y del alta.
+ * El inquilino llega por la ruta y no se elige en el formulario.
  */
 export function camposSucursal(sucursal: SucursalDto, opciones: OpcionesCamposSucursal): ReactNode[] {
   const { soloLectura, bloqueado, alCambiar } = opciones;
@@ -25,15 +23,14 @@ export function camposSucursal(sucursal: SucursalDto, opciones: OpcionesCamposSu
 
     if (meta.control === 'booleano' && campo === 'exoneradoIGV') {
       return (
-        <CampoFormulario key={campo}>
-          <CheckBox
-            text={meta.etiqueta}
-            value={sucursal.exoneradoIGV}
-            readOnly={soloLectura}
-            disabled={bloqueado}
-            onValueChanged={(evento) => alCambiar({ ...sucursal, exoneradoIGV: evento.value === true })}
-          />
-        </CampoFormulario>
+        <BooleanoCampo
+          key={campo}
+          etiqueta={meta.etiqueta}
+          valor={sucursal.exoneradoIGV}
+          soloLectura={soloLectura}
+          deshabilitado={bloqueado}
+          alCambiar={(valor) => alCambiar({ ...sucursal, exoneradoIGV: valor })}
+        />
       );
     }
 
@@ -42,18 +39,15 @@ export function camposSucursal(sucursal: SucursalDto, opciones: OpcionesCamposSu
 
     const valor = sucursal[campo];
     return (
-      <CampoFormulario key={campo}>
-        <TextBox
-          label={meta.etiqueta}
-          labelMode="floating"
-          value={typeof valor === 'string' ? valor : ''}
-          maxLength={'longitudMaxima' in meta ? meta.longitudMaxima : undefined}
-          valueChangeEvent="input"
-          readOnly={soloLectura}
-          disabled={bloqueado}
-          onValueChanged={(evento) => alCambiar({ ...sucursal, [campo]: evento.value ?? '' })}
-        />
-      </CampoFormulario>
+      <TextoCampo
+        key={campo}
+        etiqueta={meta.etiqueta}
+        valor={typeof valor === 'string' ? valor : ''}
+        longitudMaxima={'longitudMaxima' in meta ? meta.longitudMaxima : undefined}
+        soloLectura={soloLectura}
+        deshabilitado={bloqueado}
+        alCambiar={(texto) => alCambiar({ ...sucursal, [campo]: texto })}
+      />
     );
   });
 }

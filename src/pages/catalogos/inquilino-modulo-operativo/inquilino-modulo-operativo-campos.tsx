@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { CampoFormulario } from '../../../components/popup-formulario/PopupFormulario';
+import { CampoEtiqueta } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ComboReducido } from '../../../components/combo-reducido/ComboReducido';
 import { inquilinoModuloOperativoDtoEsquema, type InquilinoModuloOperativoDto } from '../../../dtos/inquilino-modulo-operativo-dto';
 import type { ObjetoReducido } from '../../../dtos/objeto-reducido';
@@ -15,7 +15,7 @@ interface OpcionesCamposModuloInquilino {
 }
 
 /**
- * Devuelve los controles como hijos directos del Form.
+ * Devuelve los campos de la ficha y del alta.
  * El inquilino no se elige: llega por la ruta del detalle.
  */
 export function camposModuloInquilino(
@@ -30,9 +30,9 @@ export function camposModuloInquilino(
       return null;
 
     return (
-      <CampoFormulario key={campo}>
+      <CampoEtiqueta key={campo} etiqueta={meta.etiqueta}>
         <ComboReducido
-          etiqueta={meta.etiqueta}
+          etiqueta=""
           valor={asignacion.moduloOperativoId > 0 ? asignacion.moduloOperativoId : null}
           opciones={modulos}
           deshabilitado={bloqueado || soloLectura}
@@ -49,7 +49,7 @@ export function camposModuloInquilino(
             });
           }}
         />
-      </CampoFormulario>
+      </CampoEtiqueta>
     );
   });
 }

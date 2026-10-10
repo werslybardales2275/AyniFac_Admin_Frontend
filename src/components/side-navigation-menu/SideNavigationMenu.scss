@@ -55,6 +55,13 @@
             margin: 0 !important;
             flex-shrink: 0;
           }
+
+          img.dx-icon {
+            width: 20px !important;
+            height: 20px;
+            object-fit: contain;
+            margin-right: 10px !important;
+          }
         }
 
         // ##
@@ -83,7 +90,7 @@
 
           &[aria-level="2"] .dx-treeview-item-content {
             font-weight: normal;
-            padding-inline: $side-panel-min-width;
+            padding-inline: 8px 24px;
           }
         }
         // ##
@@ -104,6 +111,10 @@
       display: none;
     }
   }
+}
+
+.dx-swatch-additional-dark.side-navigation-menu img.dx-icon {
+  filter: invert(1);
 }
 
 .dx-drawer-overlap.pre-init-blink-fix {
