@@ -2,6 +2,7 @@ import { memo, useCallback } from 'react';
 import TabPanel, { Item } from 'devextreme-react/tab-panel';
 import { ModulosInquilino } from '../inquilino-modulo-operativo/modulos-inquilino';
 import { SucursalesInquilino } from '../sucursal/sucursales-inquilino';
+import { UsuariosInquilino } from '../usuario/usuarios-inquilino';
 
 interface InquilinoFichasProps {
   inquilinoId: string;
@@ -21,6 +22,10 @@ export const InquilinoFichas = memo(function InquilinoFichas({ inquilinoId }: In
     <ModulosInquilino inquilinoId={inquilinoId} />
   ), [inquilinoId]);
 
+  const renderUsuarios = useCallback(() => (
+    <UsuariosInquilino inquilinoId={inquilinoId} />
+  ), [inquilinoId]);
+
   return (
     <TabPanel
       className="inquilino-fichas"
@@ -32,6 +37,7 @@ export const InquilinoFichas = memo(function InquilinoFichas({ inquilinoId }: In
     >
       <Item title="Sucursales" render={renderSucursales} />
       <Item title="Módulos operativos" render={renderModulos} />
+      <Item title="Usuarios" render={renderUsuarios} />
     </TabPanel>
   );
 });
