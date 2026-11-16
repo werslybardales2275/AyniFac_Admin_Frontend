@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
-import TreeList, { Column, SearchPanel, Sorting } from 'devextreme-react/tree-list';
+import TreeList, { Column, SearchPanel, Selection, Sorting } from 'devextreme-react/tree-list';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
-import type { FocusedRowChangedEvent } from 'devextreme/ui/tree_list';
+import type { FocusedRowChangedEvent, SelectionChangedEvent } from 'devextreme/ui/tree_list';
 import { obtenerArbolMenus, type NodoMenu } from '../../../api/menus';
 import {
   agregarMenuAlRol,
@@ -24,6 +24,7 @@ export function RolMenusPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolMenu
   const [asignados, setAsignados] = useState<RolMenuPlataformaNodo[]>([]);
   const [menuId, setMenuId] = useState<number | null>(null);
   const [fila, setFila] = useState<RolMenuPlataformaNodo>();
+  const [clavesSeleccionadas, setClavesSeleccionadas] = useState<number[]>([]);
   const [cargando, setCargando] = useState(true);
   const [errorCarga, setErrorCarga] = useState('');
   const [asignando, setAsignando] = useState(false);
@@ -45,6 +46,7 @@ export function RolMenusPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolMenu
         setArbol(catalogo);
         setAsignados(delRol);
         setFila(undefined);
+        setClavesSeleccionadas([]);
       }
       catch (error) {
         if (!vigente)
@@ -71,6 +73,7 @@ export function RolMenusPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolMenu
     const delRol = await listarMenusDelRol(rolId);
     setAsignados(delRol);
     setFila(undefined);
+    setClavesSeleccionadas([]);
   }
 
   async function asignar() {
@@ -122,6 +125,10 @@ export function RolMenusPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolMenu
 
   function alEnfocar(evento: FocusedRowChangedEvent<RolMenuPlataformaNodo, number>) {
     setFila(evento.row?.data);
+  }
+
+  function alSeleccionar(evento: SelectionChangedEvent<RolMenuPlataformaNodo, number>) {
+    setClavesSeleccionadas(evento.selectedRowKeys);
   }
 
   const ocupado = cargando || asignando || quitando;
@@ -180,8 +187,11 @@ export function RolMenusPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolMenu
         filterMode="withAncestors"
         expandNodesOnFiltering={true}
         noDataText="Este rol no tiene menús asignados."
+        selectedRowKeys={clavesSeleccionadas}
         onFocusedRowChanged={alEnfocar}
+        onSelectionChanged={alSeleccionar}
       >
+        <Selection mode="multiple" />
         <Sorting mode="none" />
         <SearchPanel visible={true} placeholder="Buscar menú" />
         <Column

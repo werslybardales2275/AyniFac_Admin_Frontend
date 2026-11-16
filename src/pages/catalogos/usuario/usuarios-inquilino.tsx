@@ -1,13 +1,15 @@
 import { memo, useState } from 'react';
 import Button from 'devextreme-react/button';
+import SelectBox from 'devextreme-react/select-box';
 import notify from 'devextreme/ui/notify';
 import {
   agregarUsuarioInquilino,
   modificarUsuarioInquilino,
   obtenerUsuarioInquilino,
+  opcionesDePersonaInquilino,
   rutaUsuariosInquilino,
 } from '../../../api/usuarios-inquilino';
-import { BooleanoCampo, TextoCampo } from '../../../components/campo-etiqueta/CampoEtiqueta';
+import { BooleanoCampo, CampoEtiqueta, TextoCampo } from '../../../components/campo-etiqueta/CampoEtiqueta';
 import { ListaCatalogo, recargarCatalogo } from '../../../components/lista-catalogo/ListaCatalogo';
 import { AccionesFormulario, PopupFormulario } from '../../../components/popup-formulario/PopupFormulario';
 import { usePermisoObjeto } from '../../../contexts/permisos-usuario';
@@ -20,6 +22,7 @@ import {
   usuarioInquilinoListadoEsquema,
   type UsuarioInquilinoListadoDto,
 } from '../../../dtos/usuario-inquilino-listado-dto';
+import type { ObjetoReducido } from '../../../dtos/objeto-reducido';
 import { OBJETO_INQUILINO } from '../../../seguridad/objetos';
 
 interface UsuariosInquilinoProps {
@@ -37,12 +40,23 @@ export const UsuariosInquilino = memo(function UsuariosInquilino({ inquilinoId }
   const [edicion, setEdicion] = useState(false);
   const [formularioVisible, setFormularioVisible] = useState(false);
   const [usuario, setUsuario] = useState<UsuarioInquilinoDto>(() => usuarioInquilinoVacio());
+  const [personas, setPersonas] = useState<ObjetoReducido[]>([]);
   const [guardando, setGuardando] = useState(false);
+
+  async function cargarPersonas(personaId?: number) {
+    const lista = await opcionesDePersonaInquilino(inquilinoId, personaId);
+    setPersonas(lista);
+  }
 
   function abrirAlta() {
     setEdicion(false);
     setUsuario(usuarioInquilinoVacio());
+    setPersonas([]);
     setFormularioVisible(true);
+    void cargarPersonas().catch((error: unknown) => {
+      const mensaje = error instanceof Error ? error.message : 'No se pudieron cargar las personas.';
+      notify(mensaje, 'error', 3000);
+    });
   }
 
   async function abrirUsuario(fila: UsuarioInquilinoListadoDto) {
@@ -50,7 +64,9 @@ export const UsuariosInquilino = memo(function UsuariosInquilino({ inquilinoId }
       const abierto = await obtenerUsuarioInquilino(inquilinoId, fila.usuarioId);
       setEdicion(true);
       setUsuario(abierto);
+      setPersonas(abierto.personaDto.id > 0 ? [abierto.personaDto] : []);
       setFormularioVisible(true);
+      await cargarPersonas(abierto.personaDto.id);
     }
     catch (error) {
       const mensaje = error instanceof Error ? error.message : 'No se pudo abrir el usuario.';
@@ -76,23 +92,12 @@ export const UsuariosInquilino = memo(function UsuariosInquilino({ inquilinoId }
     const contrasenaLimpia = (usuario.contrasena ?? '').trim();
     const preparado: UsuarioInquilinoDto = {
       ...usuario,
-      dni: usuario.dni.trim(),
-      empleado: usuario.empleado.trim(),
-      correo: usuario.correo.trim(),
       username: usuario.username.trim(),
       contrasena: contrasenaLimpia,
     };
 
-    if (!preparado.dni) {
-      notify('El DNI es obligatorio.', 'warning', 2500);
-      return;
-    }
-    if (!preparado.empleado) {
-      notify('El empleado es obligatorio.', 'warning', 2500);
-      return;
-    }
-    if (!preparado.correo) {
-      notify('El correo es obligatorio.', 'warning', 2500);
+    if (preparado.personaDto.id <= 0) {
+      notify('La persona es obligatoria.', 'warning', 2500);
       return;
     }
     if (!preparado.username) {
@@ -144,27 +149,24 @@ export const UsuariosInquilino = memo(function UsuariosInquilino({ inquilinoId }
         guardando={guardando}
         alCerrar={cerrarFormulario}
       >
-        <TextoCampo
-          etiqueta={usuarioInquilinoDtoEsquema.dni.etiqueta}
-          valor={usuario.dni}
-          longitudMaxima={usuarioInquilinoDtoEsquema.dni.longitudMaxima}
-          deshabilitado={guardando}
-          alCambiar={(valor) => cambiar({ ...usuario, dni: valor })}
-        />
-        <TextoCampo
-          etiqueta={usuarioInquilinoDtoEsquema.empleado.etiqueta}
-          valor={usuario.empleado}
-          longitudMaxima={usuarioInquilinoDtoEsquema.empleado.longitudMaxima}
-          deshabilitado={guardando}
-          alCambiar={(valor) => cambiar({ ...usuario, empleado: valor })}
-        />
-        <TextoCampo
-          etiqueta={usuarioInquilinoDtoEsquema.correo.etiqueta}
-          valor={usuario.correo}
-          longitudMaxima={usuarioInquilinoDtoEsquema.correo.longitudMaxima}
-          deshabilitado={guardando}
-          alCambiar={(valor) => cambiar({ ...usuario, correo: valor })}
-        />
+        <CampoEtiqueta etiqueta={usuarioInquilinoDtoEsquema.personaDto.etiqueta}>
+          <SelectBox
+            labelMode="hidden"
+            dataSource={personas}
+            valueExpr="id"
+            displayExpr="valor"
+            value={usuario.personaDto.id > 0 ? usuario.personaDto.id : null}
+            searchEnabled
+            disabled={guardando}
+            onValueChanged={(evento) => {
+              if (!evento.event)
+                return;
+              const id = evento.value as number | null;
+              const elegida = personas.find((persona) => persona.id === id) ?? { id: 0, valor: '' };
+              cambiar({ ...usuario, personaDto: elegida });
+            }}
+          />
+        </CampoEtiqueta>
         <TextoCampo
           etiqueta={usuarioInquilinoDtoEsquema.username.etiqueta}
           valor={usuario.username}

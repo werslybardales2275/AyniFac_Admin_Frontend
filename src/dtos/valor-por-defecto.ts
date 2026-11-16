@@ -19,6 +19,10 @@ function textoDe(valor: unknown): string {
     return valor.trim();
   if (typeof valor === 'number' || typeof valor === 'boolean')
     return String(valor);
+  if (valor && typeof valor === 'object' && 'valor' in valor) {
+    const texto = (valor as { valor: unknown }).valor;
+    return typeof texto === 'string' ? texto.trim() : '';
+  }
   return '';
 }
 

@@ -40,10 +40,17 @@
     line-height: 16px;
   }
 
-  .dx-treelist-empty-space,
-  .dx-treelist-icon-container {
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
+  // La casilla vive dentro del contenedor de iconos, después de la sangría.
+  // Un ancho fijo lo aplasta y la casilla queda encima de la primera letra.
+  .dx-treelist-rowsview .dx-row > td.dx-treelist-cell-expandable {
+    .dx-treelist-icon-container {
+      width: auto;
+      min-width: max-content;
+    }
+
+    .dx-treelist-empty-space,
+    .dx-treelist-select-checkbox-container {
+      flex: 0 0 auto;
+    }
   }
 }

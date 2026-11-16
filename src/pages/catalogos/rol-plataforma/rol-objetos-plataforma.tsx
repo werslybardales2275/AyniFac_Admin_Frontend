@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
 import CheckBox from 'devextreme-react/check-box';
-import DataGrid, { Column, Pager, Paging, SearchPanel, Sorting } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Pager, Paging, SearchPanel, Selection, Sorting } from 'devextreme-react/data-grid';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
-import type { FocusedRowChangedEvent, RowClickEvent } from 'devextreme/ui/data_grid';
+import type { FocusedRowChangedEvent, RowClickEvent, SelectionChangedEvent } from 'devextreme/ui/data_grid';
 import {
   agregarObjetoAlRol,
   listarObjetosAdmin,
@@ -32,6 +32,7 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
   const [catalogo, setCatalogo] = useState<ObjetoReducido[]>([]);
   const [filas, setFilas] = useState<RolObjetoPlataformaListadoDto[]>([]);
   const [fila, setFila] = useState<RolObjetoPlataformaListadoDto>();
+  const [clavesSeleccionadas, setClavesSeleccionadas] = useState<string[]>([]);
   const [objetoId, setObjetoId] = useState<number | null>(null);
   const [permisos, setPermisos] = useState(permisosVacios);
   const [editandoId, setEditandoId] = useState<string | null>(null);
@@ -56,6 +57,7 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
         setCatalogo(tipos);
         setFilas(delRol);
         setFila(undefined);
+        setClavesSeleccionadas([]);
       }
       catch (error) {
         if (!vigente)
@@ -82,6 +84,7 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
     const delRol = await listarObjetosDelRol(rolId);
     setFilas(delRol);
     setFila(undefined);
+    setClavesSeleccionadas([]);
   }
 
   function limpiarFormulario() {
@@ -184,7 +187,16 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
     setFila(evento.row?.data);
   }
 
+  function alSeleccionar(evento: SelectionChangedEvent<RolObjetoPlataformaListadoDto, string>) {
+    setClavesSeleccionadas(evento.selectedRowKeys);
+  }
+
   function alClicFila(evento: RowClickEvent<RolObjetoPlataformaListadoDto, string>) {
+    // El clic en la casilla de selección solo marca la fila; no carga la edición.
+    const destino = evento.event?.target as HTMLElement | undefined;
+    if (destino?.closest('.dx-command-select'))
+      return;
+
     if (evento.data)
       cargarEdicion(evento.data);
   }
@@ -314,9 +326,12 @@ export function RolObjetosPlataforma({ rolId, puedeAsignar, puedeQuitar }: RolOb
           wordWrapEnabled={true}
           hoverStateEnabled={true}
           noDataText="Este rol no tiene objetos asignados."
+          selectedRowKeys={clavesSeleccionadas}
           onFocusedRowChanged={alEnfocar}
+          onSelectionChanged={alSeleccionar}
           onRowClick={alClicFila}
         >
+          <Selection mode="multiple" showCheckBoxesMode="always" />
           <Sorting mode="single" />
           <Paging defaultPageSize={20} />
           <Pager

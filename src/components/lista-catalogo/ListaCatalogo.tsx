@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
 import DataGrid, {
   Column,
+  Selection,
   Sorting,
 } from 'devextreme-react/data-grid';
 import Pagination from 'devextreme-react/pagination';
 import TextBox from 'devextreme-react/text-box';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
-import type { FocusedRowChangedEvent, RowClickEvent } from 'devextreme/ui/data_grid';
+import type { FocusedRowChangedEvent, RowClickEvent, SelectionChangedEvent } from 'devextreme/ui/data_grid';
 import { leerMensajeError, solicitarApi } from '../../api/cliente-http';
 import type { EsquemaDto } from '../../dtos/campo';
 import type { ResultadoOperacion } from '../../dtos/resultado-operacion';
@@ -81,6 +82,7 @@ export function ListaCatalogo<T extends object>({
   const [registros, setRegistros] = useState<T[]>([]);
   const [total, setTotal] = useState(0);
   const [fila, setFila] = useState<T>();
+  const [seleccion, setSeleccion] = useState<{ claves: (string | number)[]; filas: T[] }>({ claves: [], filas: [] });
   const [eliminando, setEliminando] = useState(false);
   const [recarga, setRecarga] = useState(0);
 
@@ -136,9 +138,14 @@ export function ListaCatalogo<T extends object>({
     return () => window.removeEventListener(EVENTO_RECARGA, alRecargar);
   }, [ruta]);
 
+  function limpiarApuntadores() {
+    setFila(undefined);
+    setSeleccion({ claves: [], filas: [] });
+  }
+
   function buscar() {
     const siguiente = texto.trim();
-    setFila(undefined);
+    limpiarApuntadores();
     setPagina(1);
     if (siguiente === criterio && pagina === 1)
       setRecarga((valor) => valor + 1);
@@ -155,8 +162,8 @@ export function ListaCatalogo<T extends object>({
   }
 
   function abrir() {
-    if (fila)
-      abrirRegistro(fila);
+    if (marcados.length === 1)
+      abrirRegistro(marcados[0]);
   }
 
   function nuevo() {
@@ -168,23 +175,28 @@ export function ListaCatalogo<T extends object>({
   }
 
   async function eliminar() {
-    if (!fila || eliminando)
+    const objetivos = marcados;
+    if (objetivos.length === 0 || eliminando)
       return;
 
-    const id = fila[clave];
-    const aceptado = await confirm('¿Eliminar el registro seleccionado?', 'Eliminar');
+    const mensaje = objetivos.length === 1
+      ? '¿Eliminar el registro seleccionado?'
+      : `¿Eliminar los ${objetivos.length} registros seleccionados?`;
+    const aceptado = await confirm(mensaje, 'Eliminar');
     if (!aceptado)
       return;
 
     setEliminando(true);
     try {
-      const respuesta = await solicitarApi(`${ruta}/${encodeURIComponent(String(id))}`, { method: 'DELETE' });
-      if (!respuesta.ok) {
-        notify(await leerMensajeError(respuesta, 'No se pudo eliminar el registro.'), 'error', 3000);
-        return;
+      for (const registro of objetivos) {
+        const respuesta = await solicitarApi(`${ruta}/${encodeURIComponent(String(registro[clave]))}`, { method: 'DELETE' });
+        if (!respuesta.ok) {
+          notify(await leerMensajeError(respuesta, 'No se pudo eliminar el registro.'), 'error', 3000);
+          break;
+        }
       }
-      setFila(undefined);
-      notify('Registro eliminado.', 'success', 2000);
+      limpiarApuntadores();
+      notify(objetivos.length === 1 ? 'Registro eliminado.' : 'Registros eliminados.', 'success', 2000);
       setRecarga((valor) => valor + 1);
     }
     finally {
@@ -196,22 +208,41 @@ export function ListaCatalogo<T extends object>({
     setFila(evento.row?.data as T | undefined);
   }
 
+  function alSeleccionar(evento: SelectionChangedEvent) {
+    setSeleccion({
+      claves: evento.selectedRowKeys as (string | number)[],
+      filas: evento.selectedRowsData as T[],
+    });
+  }
+
   function alClicFila(evento: RowClickEvent) {
+    // El clic en la casilla de selección solo marca la fila; no abre el registro.
+    const destino = evento.event?.target as HTMLElement | undefined;
+    if (destino?.closest('.dx-command-select'))
+      return;
+
+    // Arrastrar para seleccionar texto también termina en clic; no abre si hay texto marcado.
+    const marcado = window.getSelection();
+    if (marcado && !marcado.isCollapsed && marcado.toString() !== '')
+      return;
+
     const registro = evento.data as T | undefined;
     if (registro)
       abrirRegistro(registro);
   }
 
   function alCambiarPagina(indice: number) {
-    setFila(undefined);
+    limpiarApuntadores();
     setPagina(indice + 1);
   }
 
   function alCambiarTamano(nuevoTamano: number) {
-    setFila(undefined);
+    limpiarApuntadores();
     setTamano(nuevoTamano);
     setPagina(1);
   }
+
+  const marcados = seleccion.filas.length > 0 ? seleccion.filas : fila ? [fila] : [];
 
   return (
     <>
@@ -230,9 +261,9 @@ export function ListaCatalogo<T extends object>({
         {puedeCrear && (
           <Button text="Nuevo" icon="plus" stylingMode="outlined" onClick={nuevo} />
         )}
-        <Button text="Abrir" icon={iconoAbrir} stylingMode="outlined" disabled={!fila} onClick={abrir} />
+        <Button text="Abrir" icon={iconoAbrir} stylingMode="outlined" disabled={marcados.length !== 1} onClick={abrir} />
         {puedeEliminar && (
-          <Button text="Eliminar" icon="trash" stylingMode="outlined" disabled={!fila || eliminando} onClick={() => { void eliminar(); }} />
+          <Button text="Eliminar" icon="trash" stylingMode="outlined" disabled={(seleccion.filas.length === 0 && !fila) || eliminando} onClick={() => { void eliminar(); }} />
         )}
       </div>
       <DataGrid
@@ -244,9 +275,12 @@ export function ListaCatalogo<T extends object>({
         autoNavigateToFocusedRow={false}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        selectedRowKeys={seleccion.claves}
         onFocusedRowChanged={alEnfocarFila}
+        onSelectionChanged={alSeleccionar}
         onRowClick={alClicFila}
       >
+        <Selection mode="multiple" showCheckBoxesMode="always" />
         <Sorting mode="none" />
         {columnas.map((campo) => {
           const enumeracion = esquema[campo].control === 'enumeracion';

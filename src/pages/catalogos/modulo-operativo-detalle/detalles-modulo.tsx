@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Button from 'devextreme-react/button';
-import TreeList, { Column, SearchPanel, Sorting } from 'devextreme-react/tree-list';
+import TreeList, { Column, SearchPanel, Selection, Sorting } from 'devextreme-react/tree-list';
 import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
-import type { ContentReadyEvent, FocusedRowChangedEvent } from 'devextreme/ui/tree_list';
+import type { ContentReadyEvent, FocusedRowChangedEvent, SelectionChangedEvent } from 'devextreme/ui/tree_list';
 import type { NodoMenu } from '../../../api/menus';
 import {
   agregarMenuAlModulo,
@@ -40,6 +40,7 @@ export function DetallesModuloOperativo({ moduloOperativoId }: DetallesModuloOpe
   const [asignados, setAsignados] = useState<ModuloOperativoDetalleNodo[]>([]);
   const [menuId, setMenuId] = useState<number | null>(null);
   const [fila, setFila] = useState<ModuloOperativoDetalleNodo>();
+  const [clavesSeleccionadas, setClavesSeleccionadas] = useState<number[]>([]);
   const [cargando, setCargando] = useState(true);
   const [errorCarga, setErrorCarga] = useState('');
   const [asignando, setAsignando] = useState(false);
@@ -62,6 +63,7 @@ export function DetallesModuloOperativo({ moduloOperativoId }: DetallesModuloOpe
         setArbol(catalogo);
         setAsignados(delModulo);
         setFila(undefined);
+        setClavesSeleccionadas([]);
       }
       catch (error) {
         if (!vigente)
@@ -88,6 +90,7 @@ export function DetallesModuloOperativo({ moduloOperativoId }: DetallesModuloOpe
     const delModulo = await listarMenusDelModulo(moduloOperativoId);
     setAsignados(delModulo);
     setFila(undefined);
+    setClavesSeleccionadas([]);
   }
 
   async function asignar() {
@@ -139,6 +142,10 @@ export function DetallesModuloOperativo({ moduloOperativoId }: DetallesModuloOpe
 
   function alEnfocar(evento: FocusedRowChangedEvent<ModuloOperativoDetalleNodo, number>) {
     setFila(evento.row?.data);
+  }
+
+  function alSeleccionar(evento: SelectionChangedEvent<ModuloOperativoDetalleNodo, number>) {
+    setClavesSeleccionadas(evento.selectedRowKeys);
   }
 
   function alListo(evento: ContentReadyEvent) {
@@ -205,9 +212,12 @@ export function DetallesModuloOperativo({ moduloOperativoId }: DetallesModuloOpe
           filterMode="withAncestors"
           expandNodesOnFiltering={true}
           noDataText="Este módulo no tiene menús asignados."
+          selectedRowKeys={clavesSeleccionadas}
           onContentReady={alListo}
           onFocusedRowChanged={alEnfocar}
+          onSelectionChanged={alSeleccionar}
         >
+          <Selection mode="multiple" />
           <Sorting mode="none" />
           <SearchPanel visible={true} placeholder="Buscar menú" />
           <Column

@@ -1,10 +1,24 @@
 import { leerMensajeError, solicitarApi } from './cliente-http';
+import { opcionesDeRuta } from './opciones';
+import type { ObjetoReducido } from '../dtos/objeto-reducido';
 import type { UsuarioInquilinoDto } from '../dtos/usuario-inquilino-dto';
 import type { ResultadoOperacion } from '../dtos/resultado-operacion';
 
 /** Listado anidado en el inquilino. ListaCatalogo pagina sobre esta ruta. No hay borrado. */
 export function rutaUsuariosInquilino(inquilinoId: string): string {
   return `/api/administracion/inquilinos/${inquilinoId}/usuarios`;
+}
+
+/** Combo de personas del inquilino abierto. La sesión es de plataforma. */
+export function opcionesDePersonaInquilino(
+  inquilinoId: string,
+  personaId?: number | null,
+): Promise<ObjetoReducido[]> {
+  return opcionesDeRuta<ObjetoReducido>(
+    `/api/administracion/inquilinos/${inquilinoId}/personas`,
+    personaId,
+    'No se pudieron cargar las personas.',
+  );
 }
 
 async function leerUsuario(respuesta: Response, respaldo: string): Promise<UsuarioInquilinoDto> {

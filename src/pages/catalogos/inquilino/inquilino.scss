@@ -20,6 +20,13 @@
 
 .inquilino-sucursales,
 .inquilino-modulos-operativos,
-.inquilino-usuarios {
+.inquilino-usuarios,
+.inquilino-configuracion {
   min-width: 0;
+}
+
+.inquilino-configuracion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
