@@ -16,6 +16,14 @@ function esAcciones(nodo: ReactNode): nodo is ReactElement<{ children: ReactNode
 }
 
 /**
+ * DevExtreme toma como área de arrastre el contenedor que aloja el overlay:
+ * con esquemas (dx-swatch-*) es un div que puede quedar con alto cero y el
+ * popup muestra el cursor de mover sin llegar a moverse. El área es la
+ * ventana; el tipado oficial solo admite Element.
+ */
+export const AREA_ARRASTRE_POPUP = window as unknown as Element;
+
+/**
  * Popup de alta del catálogo.
  * Ocupa el 70 % del ancho en escritorio y el 95 % en móvil.
  * Se puede arrastrar y reparte los campos en dos columnas.
@@ -95,6 +103,7 @@ export function PopupFormulario({
       maxHeight="90vh"
       showCloseButton={!guardando}
       dragEnabled
+      dragAndResizeArea={AREA_ARRASTRE_POPUP}
       hideOnOutsideClick={false}
       wrapperAttr={{ class: 'popup-formulario' }}
       toolbarItems={barraInferior}

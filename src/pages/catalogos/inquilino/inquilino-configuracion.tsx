@@ -140,6 +140,19 @@ export const ConfiguracionInquilino = memo(function ConfiguracionInquilino({ inq
             deshabilitado={bloqueado}
             alCambiar={(valor) => alCambiar({ monedaPredeterminada: valor.toUpperCase() })}
           />
+          <TextoCampo
+            etiqueta={
+              configuracion.claveAccesoSerefacConfigurada
+                ? 'Clave de acceso a Serefac (guardada; escribe para reemplazarla)'
+                : inquilinoConfiguracionDtoEsquema.claveAccesoSerefac.etiqueta
+            }
+            valor={configuracion.claveAccesoSerefac}
+            longitudMaxima={inquilinoConfiguracionDtoEsquema.claveAccesoSerefac.longitudMaxima}
+            mode="password"
+            soloLectura={soloLectura}
+            deshabilitado={bloqueado}
+            alCambiar={(valor) => alCambiar({ claveAccesoSerefac: valor })}
+          />
           {CAMPOS_FICHA.map((campo) => {
             const meta = inquilinoConfiguracionDtoEsquema[campo];
             if (meta.control !== 'booleano')

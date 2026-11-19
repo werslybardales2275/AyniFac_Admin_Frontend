@@ -13,6 +13,10 @@ export interface InquilinoConfiguracionDto {
   mostrarBotonRentabilidadMinima: boolean;
   /** Código SUNAT de la moneda con la que se registran las órdenes de venta. */
   monedaPredeterminada: string;
+  /** Nueva clave de acceso a Serefac: solo de entrada, el servidor nunca la devuelve. */
+  claveAccesoSerefac: string;
+  /** Verdadero cuando el inquilino ya tiene una clave de acceso guardada. */
+  claveAccesoSerefacConfigurada: boolean;
 }
 
 export const inquilinoConfiguracionDtoEsquema = {
@@ -75,6 +79,19 @@ export const inquilinoConfiguracionDtoEsquema = {
     requerido: true,
     longitudMaxima: 3,
   },
+  claveAccesoSerefac: {
+    etiqueta: 'Clave de acceso a Serefac',
+    control: 'texto',
+    requerido: false,
+    longitudMaxima: 200,
+    oculto: true,
+  },
+  claveAccesoSerefacConfigurada: {
+    etiqueta: 'Clave de acceso a Serefac configurada',
+    control: 'booleano',
+    requerido: false,
+    oculto: true,
+  },
 } as const satisfies EsquemaDto<InquilinoConfiguracionDto>;
 
 export function configuracionVacia(inquilinoId: string): InquilinoConfiguracionDto {
@@ -90,5 +107,7 @@ export function configuracionVacia(inquilinoId: string): InquilinoConfiguracionD
     requiereIndicarVendedorEnNuevaVenta: false,
     mostrarBotonRentabilidadMinima: false,
     monedaPredeterminada: 'PEN',
+    claveAccesoSerefac: '',
+    claveAccesoSerefacConfigurada: false,
   };
 }

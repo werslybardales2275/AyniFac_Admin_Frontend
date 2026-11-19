@@ -5,6 +5,7 @@ import { ModulosInquilino } from '../inquilino-modulo-operativo/modulos-inquilin
 import { TributosInquilino } from '../inquilino-tributo-adicional/tributos-inquilino';
 import { SucursalesInquilino } from '../sucursal/sucursales-inquilino';
 import { UsuariosInquilino } from '../usuario/usuarios-inquilino';
+import { ConfiguracionAdicionalInquilino } from './configuracion-adicional-inquilino';
 import { ConfiguracionInquilino } from './inquilino-configuracion';
 
 interface InquilinoFichasProps {
@@ -38,6 +39,10 @@ export const InquilinoFichas = memo(function InquilinoFichas({ inquilinoId }: In
     <ConfiguracionInquilino inquilinoId={inquilinoId} />
   ), [inquilinoId]);
 
+  const renderConfiguracionAdicional = useCallback(() => (
+    <ConfiguracionAdicionalInquilino inquilinoId={inquilinoId} />
+  ), [inquilinoId]);
+
   const renderCorrelativos = useCallback(() => (
     <CorrelativosInquilino inquilinoId={inquilinoId} />
   ), [inquilinoId]);
@@ -56,6 +61,7 @@ export const InquilinoFichas = memo(function InquilinoFichas({ inquilinoId }: In
       <Item title="Tributos adicionales" render={renderTributos} />
       <Item title="Usuarios" render={renderUsuarios} />
       <Item title="Configuración" render={renderConfiguracion} />
+      <Item title="Configuración adicional" render={renderConfiguracionAdicional} />
       <Item title="Correlativos" render={renderCorrelativos} />
     </TabPanel>
   );

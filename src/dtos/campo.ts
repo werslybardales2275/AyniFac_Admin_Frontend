@@ -4,6 +4,8 @@
  */
 export type ControlCampo =
   | 'texto'
+  /** Texto largo (columna text): editor multilínea. */
+  | 'area'
   | 'entero'
   | 'decimal'
   | 'booleano'

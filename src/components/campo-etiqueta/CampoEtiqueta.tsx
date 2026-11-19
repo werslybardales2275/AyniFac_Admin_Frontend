@@ -1,6 +1,7 @@
 import type { ReactNode, Ref } from 'react';
 import CheckBox from 'devextreme-react/check-box';
 import NumberBox from 'devextreme-react/number-box';
+import TextArea from 'devextreme-react/text-area';
 import TextBox, { type TextBoxRef } from 'devextreme-react/text-box';
 import './campo-etiqueta.scss';
 
@@ -61,6 +62,43 @@ export function TextoCampo({
         onValueChange={(texto) => {
           if (!soloLectura)
             alCambiar(texto ?? '');
+        }}
+      />
+    </CampoEtiqueta>
+  );
+}
+
+/**
+ * Editor multilínea para las columnas text de la base. Crece con el
+ * contenido hasta el tope y luego muestra scroll.
+ */
+export function TextoAreaCampo({
+  etiqueta,
+  valor,
+  deshabilitado,
+  soloLectura,
+  alCambiar,
+}: {
+  etiqueta: string;
+  valor: string;
+  deshabilitado?: boolean;
+  soloLectura?: boolean;
+  alCambiar: (valor: string) => void;
+}) {
+  return (
+    <CampoEtiqueta etiqueta={etiqueta}>
+      <TextArea
+        labelMode="hidden"
+        value={valor}
+        valueChangeEvent="input"
+        autoResizeEnabled
+        minHeight={80}
+        maxHeight={200}
+        readOnly={soloLectura}
+        disabled={deshabilitado}
+        onValueChanged={(evento) => {
+          if (!soloLectura)
+            alCambiar(evento.value ?? '');
         }}
       />
     </CampoEtiqueta>
